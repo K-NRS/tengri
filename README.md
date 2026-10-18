@@ -91,7 +91,11 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 
 ## Ornaments
 
-The `╬` marks and the emblem above are tamga-inspired geometry: plain box-drawing characters in the spirit of Turkic clan marks. They are decoration, not copies of any clan's tamga. Tamgas have no Unicode block.
+<img src="docs/ashina-tamga.svg" alt="Tamga of the Ashina clan" width="180">
+
+*Tamga attributed to the Ashina clan, the ruling clan of the Göktürks. Drawing: [Sebirkhan](https://commons.wikimedia.org/wiki/File:Ashina_Tribe_Tamga.svg), CC0.*
+
+Tamgas have no Unicode block, so the `╬` marks in the frame and the emblem at the top are only tamga-inspired geometry made of box-drawing characters. They are decoration, not copies of any clan's tamga.
 
 ## License
 

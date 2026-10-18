@@ -6,10 +6,10 @@ Old Turkic (Göktürk, Orkhon) script in your terminal.
 npx tengri
 ```
 
-A random line from the Orkhon inscriptions or Kutadgu Bilig, in the original, modern Turkish and English:
+A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Old Turkic script, Latin transcription, modern Turkish and English.
 
 ```
-╭─ tengri ───────────────────────────────────────────────────────────────╮
+╭─ 𐱅𐰭𐰼𐰃 ─────────────────────────────────────────────────────────────────╮
 │                                                                        │
 │  𐰇𐰔𐰀⁚𐰚𐰇𐰚⁚𐱅𐰭𐰼𐰃⁚𐰽𐰺𐰀⁚𐰖𐰍𐰃𐰔⁚𐰘𐰼⁚𐰴𐰃𐰞𐰣𐱃𐰴𐰑𐰀⁚𐰚𐰃𐰤⁚𐰺𐰀⁚𐰚𐰃𐱁𐰃⁚𐰆𐰍𐰞𐰃⁚𐰴𐰃𐰞𐰣𐰢𐱁             │
 │  üze kök tengri asra yağız yer kılıntukda ekin ara kişi oğlı kılınmış  │
@@ -75,7 +75,7 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 - The 8th–11th century texts are public domain. The transcriptions are simplified Latin spellings, cross-checked against the Turkish Wikisource editions of the inscriptions and published studies (Ayaz 2021, Bilgin 2005, Mert & Albayrak 2013). Where editions disagree, the quote's `note` says so.
 - The Turkish and English renderings are my own, not taken from any published translation. They are not scholarly translations. Corrections are welcome.
 - Line labels: E, S, N = east, south, north face. `Tengri teg Tengride…` is KT S 1 / BK N 1.
-- *Kutadgu Bilig* is written in Karakhanid Turkic, not Göktürk script, so it is shown in Latin only. Couplet numbers follow the common Arat-based numbering; the Fergana manuscript numbers differ (211 is 208 there).
+- *Kutadgu Bilig* is written in Karakhanid Turkic with Arabic letters, never in Göktürk script. The Old Turkic letters shown for it are a **stylization**: the same rules as above applied to the Latin text, nothing a scribe ever wrote. The frame says so (`stylized script` in the top border, `script: "stylized"` in the data). Couplet numbers follow the common Arat-based numbering; the Fergana manuscript numbers differ (211 is 208 there).
 
 ## License
 

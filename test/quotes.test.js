@@ -9,7 +9,7 @@ test('every quote has the fields the CLI prints', () => {
       assert.equal(typeof q[field], 'string', `${q.id}.${field}`)
       assert.ok(q[field].trim(), `${q.id}.${field} is empty`)
     }
-    assert.equal(typeof q.script, 'boolean', `${q.id}.script`)
+    assert.ok(['original', 'stylized'].includes(q.script), `${q.id}.script`)
   }
 })
 
@@ -17,17 +17,17 @@ test('ids are unique', () => {
   assert.equal(new Set(quotes.map((q) => q.id)).size, quotes.length)
 })
 
-test('inscription quotes transliterate fully: no Latin letter is left over', () => {
-  const scripted = quotes.filter((q) => q.script)
-  assert.ok(scripted.length > 0)
-  for (const q of scripted) {
+test('every quote transliterates fully: no Latin letter is left over', () => {
+  for (const q of quotes) {
     const out = transliterate(q.text)
     assert.equal(/\p{L}/u.test(out.replace(/[\u{10C00}-\u{10C4F}]/gu, '')), false, `${q.id}: ${out}`)
   }
 })
 
-test('Kutadgu Bilig is never rendered in Old Turkic script', () => {
-  for (const q of quotes.filter((q) => q.source === 'Kutadgu Bilig')) assert.equal(q.script, false, q.id)
+test('script is original only for the inscriptions, stylized for Kutadgu Bilig', () => {
+  for (const q of quotes) {
+    assert.equal(q.script, q.source === 'Kutadgu Bilig' ? 'stylized' : 'original', q.id)
+  }
 })
 
 test('randomQuote picks by the injected random source', () => {

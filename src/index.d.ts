@@ -13,8 +13,8 @@ export interface Quote {
   source: string
   /** line or couplet label in the source */
   ref: string
-  /** true for the Orkhon inscriptions, which are shown in Old Turkic script */
-  script: boolean
+  /** "original" for the Orkhon inscriptions; "stylized" when the source was not written in Old Turkic script */
+  script: 'original' | 'stylized'
   /** transcription in simplified Latin spelling */
   text: string
   /** modern Turkish */

@@ -1,12 +1,12 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { formatQuote, CREDIT } from '../src/format.js'
+import { formatQuote, CREDIT, STYLIZED_TAG } from '../src/format.js'
 import { transliterate, SEPARATOR } from '../src/index.js'
 
 const inscription = {
   source: 'Fixture stele',
   ref: 'X 1',
-  script: true,
+  script: 'original',
   text: 'täŋri',
   tr: 'türkçe satır',
   en: 'english line',
@@ -34,7 +34,7 @@ test('inscription quote: script, transcription, tr, en, attribution in order', (
 
 test('rounded frame: every line has the same width, credit sits in the bottom border', () => {
   const lines = formatQuote(inscription).split('\n')
-  assert.ok(lines[0].startsWith('╭─ tengri '))
+  assert.ok(lines[0].startsWith(`╭─ ${transliterate('tengri')} `))
   assert.ok(lines[0].endsWith('╮'))
   assert.ok(lines.at(-1).startsWith('╰'))
   assert.ok(lines.at(-1).endsWith('╯'))
@@ -43,10 +43,13 @@ test('rounded frame: every line has the same width, credit sits in the bottom bo
   assert.equal(new Set(lines.map((l) => [...l].length)).size, 1)
 })
 
-test('non-inscription quote has no script line', () => {
-  const out = formatQuote({ ...inscription, script: false })
-  assert.equal(out.includes(transliterate('täŋri')), false)
-  assert.ok(out.includes('täŋri'))
+test('stylized quote is tagged in the top border, original is not', () => {
+  const stylized = formatQuote({ ...inscription, script: 'stylized' }).split('\n')
+  assert.ok(stylized[0].includes(STYLIZED_TAG))
+  assert.ok(stylized[0].startsWith(`╭─ ${transliterate('tengri')} `) && stylized[0].endsWith('─╮'))
+  assert.ok(stylized.some((l) => l.includes(transliterate('täŋri'))))
+  assert.equal(new Set(stylized.map((l) => [...l].length)).size, 1)
+  assert.equal(formatQuote(inscription).includes(STYLIZED_TAG), false)
 })
 
 test('long lines wrap, the frame keeps its width, script wraps between words', () => {

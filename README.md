@@ -21,11 +21,11 @@ npx tengri
 A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Old Turkic script, Latin transcription, modern Turkish and English.
 
 ```
-╭─ 𐱅𐰭𐰼𐰃 ───────────────────────────────────────────────────────────── ╬ ─╮
+╭─ 𐱅𐰭𐰼𐰃 ─────────────────────────────────────────────────────────────────╮
 │                                                                        │
 │  𐰇𐰔𐰀⁚𐰚𐰇𐰚⁚𐱅𐰭𐰼𐰃⁚𐰽𐰺𐰀⁚𐰖𐰍𐰃𐰔⁚𐰘𐰼⁚𐰴𐰃𐰞𐰣𐱃𐰴𐰑𐰀⁚𐰚𐰃𐰤⁚𐰺𐰀⁚𐰚𐰃𐱁𐰃⁚𐰆𐰍𐰞𐰃⁚𐰴𐰃𐰞𐰣𐰢𐱁             │
 │  üze kök tengri asra yağız yer kılıntukda ekin ara kişi oğlı kılınmış  │
-│                                ═══╬═══                                 │
+│                                   ⁚                                    │
 │  Üstte mavi gök, altta yağız yer var edilirken, ikisinin arasına       │
 │  insanoğlu da var edilmiş.                                             │
 │  When the blue sky above and the dark earth below were made, between   │
@@ -95,7 +95,7 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 
 *Tamga attributed to the Ashina clan, the ruling clan of the Göktürks. Drawing: [Sebirkhan](https://commons.wikimedia.org/wiki/File:Ashina_Tribe_Tamga.svg), CC0.*
 
-Tamgas have no Unicode block, so the `╬` marks in the frame and the emblem at the top are only tamga-inspired geometry made of box-drawing characters. They are decoration, not copies of any clan's tamga.
+Tamgas have no Unicode block, so the emblem at the top is only tamga-inspired geometry made of box-drawing characters, decoration and not a copy of any clan's tamga. The divider inside the frame is the colon-like word separator (⁚) used on the stones.
 
 ## License
 

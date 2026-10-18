@@ -1,13 +1,9 @@
 import { transliterate, SEPARATOR } from './transliterate.js'
+import { GOLD, FAINT, ITALIC_FAINT, BORDER, WHISPER, paint as paintCode } from './style.js'
 
 export const CREDIT = 'made by Kerem Noras (noras.tech)'
 export const MIN_WIDTH = 32
 
-const GOLD = '1;38;5;179'
-const FAINT = '2'
-const ITALIC_FAINT = '2;3'
-const BORDER = '38;5;137'
-const WHISPER = '2;38;5;242'
 
 const PAD = 2
 const TITLE = transliterate('tengri')
@@ -34,7 +30,7 @@ const wrapWords = (text, width, sep = ' ') => {
  */
 export const formatQuote = (quote, { color = false, width = 68 } = {}) => {
   const textWidth = Math.max(width, MIN_WIDTH)
-  const paint = (code) => (text) => (color ? `\x1b[${code}m${text}\x1b[0m` : text)
+  const paint = (code) => paintCode(code, color)
   const wrap = (text, code, sep) => wrapWords(text, textWidth, sep).map((line) => ({ line, code }))
 
   const original = [...wrap(transliterate(quote.text), GOLD, SEPARATOR), ...wrap(quote.text, FAINT)]

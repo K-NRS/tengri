@@ -26,3 +26,18 @@ export interface Quote {
 export const quotes: Quote[]
 
 export function randomQuote(random?: () => number): Quote
+
+export interface Motif {
+  id: string
+  kind: 'tamga' | 'kilim'
+  /** Turkish name */
+  tr: string
+  /** English name */
+  en: string
+  /** artist and license of the source drawing */
+  credit: string
+  /** 12 rows of 32 braille characters */
+  rows: string[]
+}
+
+export const motifs: Motif[]

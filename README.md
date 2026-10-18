@@ -2,6 +2,18 @@
 
 Old Turkic (Göktürk, Orkhon) script in your terminal.
 
+```
+      ┃ ┃ ┃
+      ┃ ┃ ┃
+  ━━━━╋━╋━╋━━━━
+      ┃ ┃ ┃
+  ━━━━╋━╋━╋━━━━
+      ┃ ┃ ┃
+  ━━━━╋━╋━╋━━━━
+      ┃ ┃ ┃
+      ┃ ┃ ┃
+```
+
 ```sh
 npx tengri
 ```
@@ -9,11 +21,11 @@ npx tengri
 A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Old Turkic script, Latin transcription, modern Turkish and English.
 
 ```
-╭─ 𐱅𐰭𐰼𐰃 ─────────────────────────────────────────────────────────────────╮
+╭─ 𐱅𐰭𐰼𐰃 ───────────────────────────────────────────────────────────── ╬ ─╮
 │                                                                        │
 │  𐰇𐰔𐰀⁚𐰚𐰇𐰚⁚𐱅𐰭𐰼𐰃⁚𐰽𐰺𐰀⁚𐰖𐰍𐰃𐰔⁚𐰘𐰼⁚𐰴𐰃𐰞𐰣𐱃𐰴𐰑𐰀⁚𐰚𐰃𐰤⁚𐰺𐰀⁚𐰚𐰃𐱁𐰃⁚𐰆𐰍𐰞𐰃⁚𐰴𐰃𐰞𐰣𐰢𐱁             │
 │  üze kök tengri asra yağız yer kılıntukda ekin ara kişi oğlı kılınmış  │
-│                                                                        │
+│                                ═══╬═══                                 │
 │  Üstte mavi gök, altta yağız yer var edilirken, ikisinin arasına       │
 │  insanoğlu da var edilmiş.                                             │
 │  When the blue sky above and the dark earth below were made, between   │
@@ -76,6 +88,10 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 - The Turkish and English renderings are my own, not taken from any published translation. They are not scholarly translations. Corrections are welcome.
 - Line labels: E, S, N = east, south, north face. `Tengri teg Tengride…` is KT S 1 / BK N 1.
 - *Kutadgu Bilig* is written in Karakhanid Turkic with Arabic letters, never in Göktürk script. The Old Turkic letters shown for it are a **stylization**: the same rules as above applied to the Latin text, nothing a scribe ever wrote. The frame says so (`stylized script` in the top border, `script: "stylized"` in the data). Couplet numbers follow the common Arat-based numbering; the Fergana manuscript numbers differ (211 is 208 there).
+
+## Ornaments
+
+The `╬` marks and the emblem above are tamga-inspired geometry: plain box-drawing characters in the spirit of Turkic clan marks. They are decoration, not copies of any clan's tamga. Tamgas have no Unicode block.
 
 ## License
 

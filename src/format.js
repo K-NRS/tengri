@@ -11,6 +11,8 @@ const BORDER = '38;5;137'
 const WHISPER = '2;38;5;242'
 
 const PAD = 2
+const MARK = '╬'
+const DIVIDER = `═══${MARK}═══`
 const TITLE = transliterate('tengri')
 
 const wrapWords = (text, width, sep = ' ') => {
@@ -50,11 +52,17 @@ export const formatQuote = (quote, { color = false, width = 68 } = {}) => {
     return `${border('│')}${' '.repeat(PAD)}${text}${' '.repeat(textWidth - [...line].length)}${' '.repeat(PAD)}${border('│')}`
   }
 
-  const tag = quote.script === 'stylized' ? ` ${STYLIZED_TAG} ` : ''
+  const tag = quote.script === 'stylized' ? `${STYLIZED_TAG} ` : ''
+  const left = `╭─ ${TITLE} `
+  const right = ` ${tag}${MARK} ─╮`
   const top =
-    border(`╭─ ${TITLE} ${'─'.repeat(inner - [...TITLE].length - tag.length - 4)}`) +
+    border(left + '─'.repeat(inner + 2 - [...left].length - [...right].length) + ' ') +
     paint(WHISPER)(tag) +
-    border('─╮')
+    border(`${MARK} ─╮`)
+  const divider = {
+    line: ' '.repeat(Math.floor((textWidth - DIVIDER.length) / 2)) + DIVIDER,
+    code: BORDER,
+  }
   const label = ` ${CREDIT} `
   const bottomFill = '─'.repeat(inner - label.length - 1)
   const bottom = border(`╰${bottomFill}`) + paint(WHISPER)(label) + border('─╯')
@@ -63,7 +71,7 @@ export const formatQuote = (quote, { color = false, width = 68 } = {}) => {
     top,
     row(),
     ...original.map(row),
-    row(),
+    row(divider),
     ...renderings.map(row),
     row(),
     ...attribution.map(row),

@@ -23,7 +23,7 @@ test('inscription quote: script, transcription, tr, en, attribution in order', (
     '',
     transliterate('täŋri'),
     'täŋri',
-    '',
+    '═══╬═══',
     'türkçe satır',
     'english line',
     '',
@@ -35,7 +35,7 @@ test('inscription quote: script, transcription, tr, en, attribution in order', (
 test('rounded frame: every line has the same width, credit sits in the bottom border', () => {
   const lines = formatQuote(inscription).split('\n')
   assert.ok(lines[0].startsWith(`╭─ ${transliterate('tengri')} `))
-  assert.ok(lines[0].endsWith('╮'))
+  assert.ok(lines[0].endsWith('╬ ─╮'))
   assert.ok(lines.at(-1).startsWith('╰'))
   assert.ok(lines.at(-1).endsWith('╯'))
   assert.ok(lines.at(-1).includes(CREDIT))

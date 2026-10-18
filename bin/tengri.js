@@ -14,13 +14,13 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log(USAGE)
 } else if (args.includes('--tamga')) {
   const { motifs } = await import('../src/motifs.js')
-  const { play } = await import('../src/animate.js')
+  const { play, canAnimate } = await import('../src/animate.js')
   process.on('SIGINT', () => {
     process.stdout.write('\x1b[?25h\n')
     process.exit(130)
   })
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty: Boolean(process.stdout.isTTY), color })
+  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty: canAnimate(process.stdout), color })
   console.log(`\n  ${paint(WHISPER, color)(CREDIT)}\n`)
 } else if (args.length > 0) {
   console.log(transliterate(args.join(' ')))

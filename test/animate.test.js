@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { reveal, dissolve, compose, play } from '../src/animate.js'
+import { reveal, dissolve, compose, play, canAnimate } from '../src/animate.js'
 import { motifs } from '../src/motifs.js'
 
 const rows = ['⣿⣿⣿⣿', '⣿⣿⣿⣿', '⣿⣿⣿⣿']
@@ -70,4 +70,12 @@ test('motif data: unique ids, uniform grids, credits', () => {
     assert.ok(m.rows.some((r) => /[⠁-⣿]/u.test(r)), `${m.id} is empty`)
     if (m.kind === 'tamga') assert.match(m.credit, /CC0|public domain/i, m.id)
   }
+})
+
+test('animation needs a TTY at least as wide as one frame line', () => {
+  const width = compose(motifs[0], motifs[0].rows)[0].length
+  assert.equal(canAnimate({ isTTY: true, columns: width }), true)
+  assert.equal(canAnimate({ isTTY: true, columns: width - 1 }), false)
+  assert.equal(canAnimate({ isTTY: false, columns: 200 }), false)
+  assert.equal(canAnimate({ isTTY: true, columns: undefined }), true)
 })

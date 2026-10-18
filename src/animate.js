@@ -6,6 +6,10 @@ const REVEAL_STEPS = 14
 const DISSOLVE_STEPS = 10
 const FRAME_MS = 35
 const HOLD_MS = 1000
+const LINE_WIDTH = WIDTH + 2
+
+/** In-place redraw breaks when a line wraps, so narrow terminals get the static print. */
+export const canAnimate = ({ isTTY, columns }) => Boolean(isTTY) && (columns ?? 80) >= LINE_WIDTH
 
 const hash = (n) => {
   let x = Math.imul(n + 1, 2654435761) >>> 0

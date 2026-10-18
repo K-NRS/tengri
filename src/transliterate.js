@@ -2,8 +2,8 @@
 // Output uses the Orkhon letter forms of the Unicode "Old Turkic" block (U+10C00-10C4F).
 //
 // Spelling conventions followed (as on the Orkhon stones):
-//  - a, e, ı, i are not written between consonants inside a word; o, u, ö, ü always are
-//  - a word-initial and a word-final vowel is always written
+//  - a/e are written only at the end of a word (or next to another vowel)
+//  - of ı i o u ö ü only the first one in a word is written, plus a final one; the rest are left out (bodun -> b o d n, kılıntu- -> k ı l n t)
 //  - a/e share one letter, o/u share one, ö/ü share one, ı/i share one
 //  - b d g k l n r s t y have a back-vowel and a front-vowel letter; the nearest vowel decides
 //  - syllable signs and ligatures (oq, ök, nt, lt, ...) are never emitted
@@ -16,21 +16,21 @@ const I = glyph(0x10c03)
 const O = glyph(0x10c06)
 const OE = glyph(0x10c07)
 
-const vowel = (written, front, droppable) => ({ vowel: true, written, front, droppable })
+const vowel = (written, front, keptInFirstSyllable) => ({ vowel: true, written, front, keptInFirstSyllable })
 const pair = (back, front) => ({ back: glyph(back), front: glyph(front) })
 const single = (code) => ({ back: glyph(code), front: glyph(code) })
 
 const LETTERS = {
-  a: vowel(A, false, true),
-  e: vowel(A, true, true),
-  ä: vowel(A, true, true),
+  a: vowel(A, false, false),
+  e: vowel(A, true, false),
+  ä: vowel(A, true, false),
   ı: vowel(I, false, true),
   ï: vowel(I, false, true),
   i: vowel(I, true, true),
-  o: vowel(O, false, false),
-  u: vowel(O, false, false),
-  ö: vowel(OE, true, false),
-  ü: vowel(OE, true, false),
+  o: vowel(O, false, true),
+  u: vowel(O, false, true),
+  ö: vowel(OE, true, true),
+  ü: vowel(OE, true, true),
 
   b: pair(0x10c09, 0x10c0b),
   v: pair(0x10c09, 0x10c0b),
@@ -73,13 +73,15 @@ const frontAt = (items, i) => {
 
 const spellWord = (word) => {
   const items = toItems(word)
+  let vowelsSeen = 0
   return items
     .map((item, i) => {
       if (item.raw) return item.ch
       if (!item.vowel) return frontAt(items, i) ? item.front : item.back
-      const afterConsonant = items[i - 1] !== undefined && !items[i - 1].vowel && !items[i - 1].raw
       const final = items[i + 1] === undefined || items[i + 1].raw
-      return item.droppable && afterConsonant && !final ? '' : item.written
+      const afterVowel = items[i - 1]?.vowel === true
+      const firstSyllable = item.keptInFirstSyllable && vowelsSeen++ === 0
+      return final || afterVowel || firstSyllable ? item.written : ''
     })
     .join('')
 }

@@ -1,0 +1,14 @@
+{
+  "name": "tengri",
+  "version": "0.1.0",
+  "description": "Old Turkic (Göktürk / Orkhon) script transliterator and a daily line from the Orkhon inscriptions and Kutadgu Bilig, in the terminal.",
+  "keywords": ["göktürk", "orkhon", "old-turkic", "transliteration", "unicode", "kutadgu-bilig", "tengri", "cli"],
+  "license": "MIT",
+  "type": "module",
+  "bin": { "tengri": "./bin/tengri.js" },
+  "exports": { ".": { "types": "./src/index.d.ts", "default": "./src/index.js" } },
+  "types": "./src/index.d.ts",
+  "files": ["src", "bin", "data", "README.md", "LICENSE"],
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node --test" }
+}

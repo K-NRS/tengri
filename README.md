@@ -3,15 +3,36 @@
 Old Turkic (Göktürk, Orkhon) script in your terminal.
 
 ```
-      ┃ ┃ ┃
-      ┃ ┃ ┃
-  ━━━━╋━╋━╋━━━━
-      ┃ ┃ ┃
-  ━━━━╋━╋━╋━━━━
-      ┃ ┃ ┃
-  ━━━━╋━╋━╋━━━━
-      ┃ ┃ ┃
-      ┃ ┃ ┃
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣴⣶⣶⣶⣿⣿⣿⣿⣶⣶⣶⣦⣤⣤⣀⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⣿⣿⣿⣿⡿⠟⠛⠉⢹⣿⣿⣿⠇⣿⣿⣿⣿⠘⣿⣿⣿⡏⠉⠛⠻⠿⣿⣿⣿⣿⣶⣄⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀⠀⠘⢿⣿⡟⠀⠘⣿⣿⠃⠀⢻⣿⣿⠃⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣿⣦⣄
+⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣷⣄
+⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⠟⠁⠀⠀⣤⡄⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢀⣤⠀⠀⠈⠙⢿⣿⣿⣷⡀
+⠀⠀⠀⠀⠀⣰⣿⣿⣿⠟⠁⠀⢠⣄⡀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠈⠻⣿⣿⣿⣆
+⠀⠀⠀⠀⣼⣿⣿⡿⠃⠀⠀⠀⠈⠙⠿⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠘⢿⣿⣿⣧
+⠀⠀⠀⣼⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⣤⣾⣧⠀⠀⠀⠀⠈⢻⣿⣿⣧
+⠀⠀⣼⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⢀⣼⣿⣇⠀⢠⣿⣿⡄⠀⣸⣿⣿⡀⠀⠀⠀⠀⠀⠀⢸⣿⠋⠈⢻⣷⠀⠀⠀⠀⠀⢻⣿⣿⣧
+⠀⢰⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⡄⣿⣿⣿⣿⢠⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠁⠀⠀⠀⠀⠀⠈⣿⣿⣿⡆
+⠀⣿⣿⣿⣇⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⢀⣀⣀⡀⢈⣙⣛⣋⠁⢉⣛⣛⡉⠀⣙⣛⣋⡁⢀⣀⣀⡀⠀⠀⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣸⣿⣿⣿
+⢰⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣿⣿⣷⢸⣿⣿⣿⠀⢸⣿⣿⡇⠀⣿⣿⣿⡇⣾⣿⣿⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣾⣿⣿⣿⣿⣿⣿⡇
+⢸⣿⣿⡿⠿⠟⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠿⠏⠘⠛⠛⠛⠀⠘⠛⠛⠃⠀⠛⠛⠛⠃⠸⠿⠟⠋⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠛⠻⠿⢿⣿⣿⣇
+⣿⣿⣿⣿⣿⣿⣶⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣶⣿⣿⣧⢰⣶⣶⣶⠀⢰⣶⣶⡆⠀⣶⣶⣶⡆⣸⣿⣿⣶⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣶⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⠿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠿⣿⣿⡟⠸⠿⠿⠿⠀⠸⠿⠿⠇⠀⠿⠿⠿⠇⢹⣿⣿⠿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠿⣿⣿⣿⣿⣿⣿
+⢸⣿⣿⣷⣶⣤⣤⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣠⣤⣶⣄⢠⣤⣤⣤⠀⢠⣤⣤⡄⠀⣤⣤⣤⡄⢠⣶⣤⣄⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣤⣤⣶⣾⣿⣿⡏
+⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢸⣿⣿⣿⠀⢸⣿⣿⡇⠀⣿⣿⣿⡇⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+⠀⣿⣿⣿⡏⠉⠉⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⢀⡀⠈⠉⠉⠁⢈⣩⣭⣉⡀⣈⣩⣍⣁⠀⣉⣭⣍⡁⠈⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⢹⣿⣿⣿
+⠀⠸⣿⣿⣿⡀⠀⠀⠀⠀⠀⢀⣴⡿⣷⣄⣠⣾⢿⣦⡀⠀⠀⢸⣿⣿⣿⠇⣿⣿⣿⣿⠘⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⢸⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⠇
+⠀⠀⢻⣿⣿⣷⠀⠀⠀⠀⠀⠻⠋⠀⠈⣿⡟⠁⠀⠙⠟⠀⠀⠈⢻⣿⡏⠀⠘⣿⣿⠃⠀⢹⣿⣿⠁⠀⠀⠀⠀⠀⠀⢸⣿⠿⣷⣄⠀⠀⠀⠀⠀⠀⣼⣿⣿⡟
+⠀⠀⠀⢻⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠈⠋⠀⠀⠀⠀⢀⣼⣿⣿⡟
+⠀⠀⠀⠀⢻⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⡟
+⠀⠀⠀⠀⠀⠹⣿⣿⣿⣦⡀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⢀⣴⣿⣿⣿⠏
+⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣿⣤⡀⠀⠀⠙⠃⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠘⠛⠀⠀⠀⣠⣾⣿⣿⡿⠁
+⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⣿⣿⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⣿⣿⣿⡿⠋
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣷⣦⣀⠀⠀⠀⠀⠀⢠⣾⣿⣧⠀⢠⣿⣿⡄⠀⣼⣿⣿⡄⠀⠀⠀⠀⠀⣀⣴⣾⣿⣿⣿⠟⠋
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠿⣿⣿⣿⣿⣶⣦⣤⣀⣸⣿⣿⣿⡆⣿⣿⣿⣿⢠⣿⣿⣿⣇⣀⣤⣴⣶⣿⣿⣿⣿⠿⠋⠁
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠛⠿⠿⠿⢿⣿⣿⣿⣿⡿⠿⠿⠿⠛⠛⠉⠁
 ```
 
 ```sh
@@ -112,7 +133,9 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 
 *Tamga attributed to the Ashina clan, the ruling clan of the Göktürks. Drawing: [Sebirkhan](https://commons.wikimedia.org/wiki/File:Ashina_Tribe_Tamga.svg), CC0.*
 
-Tamgas have no Unicode block, so the emblem at the top is only tamga-inspired geometry made of box-drawing characters, decoration and not a copy of any clan's tamga. The divider inside the frame is the colon-like word separator (⁚) used on the stones.
+Tamgas have no Unicode block, so the frame uses the Old Turkic word separator (⁚) as its only ornament and the animation draws tamgas and motifs as braille bitmaps.
+
+The emblem at the top is the Tengrist symbol, rendered to braille from [Tengrism1.svg](https://commons.wikimedia.org/wiki/File:Tengrism1.svg) (vector by Modanung, CC0; the design is credited on Commons to tengry.org, marked public domain). The vector is in [docs/tengrism-symbol.svg](docs/tengrism-symbol.svg).
 
 ## License
 

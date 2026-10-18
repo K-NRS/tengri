@@ -7,6 +7,7 @@ Needs macOS (qlmanage renders the SVGs) and Pillow. Run from the repo root:
     python3 scripts/build-motifs.py
 """
 import json
+import math
 import subprocess
 import tempfile
 from pathlib import Path
@@ -14,7 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parent.parent
-W, H = 64, 48  # dots -> 32 columns x 12 rows of braille cells
+W, H = 96, 64  # dots -> 48 columns x 16 rows of braille cells
 BITS = [[0x01, 0x08], [0x02, 0x10], [0x04, 0x20], [0x40, 0x80]]
 
 # id, Turkish name, English name, svg file, credit
@@ -64,7 +65,7 @@ def fit(mask):
     box = mask.getbbox()
     assert box, "empty mask"
     mask = mask.crop(box)
-    scale = min((W - 4) / mask.width, (H - 4) / mask.height)
+    scale = min((W - 6) / mask.width, (H - 6) / mask.height)
     w, h = max(1, round(mask.width * scale)), max(1, round(mask.height * scale))
     mask = mask.resize((w, h), Image.LANCZOS)
     canvas = Image.new("L", (W, H), 0)
@@ -79,8 +80,33 @@ N = 16
 C = (N - 1) / 2
 
 
-def grid(fn):
-    return [[1 if fn(x, y) else 0 for x in range(N)] for y in range(N)]
+def raster(fn):
+    """Sample fn (16x16 design space) on the dot grid, centred, 4 dots per unit."""
+    side = H
+    left = (W - side) // 2
+    mask = [[0] * W for _ in range(H)]
+    for y in range(H):
+        for x in range(side):
+            gx, gy = (x + 0.5) * N / side - 0.5, (y + 0.5) * N / side - 0.5
+            mask[y][left + x] = 1 if fn(gx, gy) else 0
+    return mask
+
+
+def eroded(fn, r):
+    angles = [(math.cos(a * math.pi / 4), math.sin(a * math.pi / 4)) for a in range(8)]
+    return lambda x, y: fn(x, y) and all(fn(x + r * dx, y + r * dy) for dx, dy in angles)
+
+
+def band(fn, r):
+    inner = eroded(fn, r)
+    return lambda x, y: fn(x, y) and not inner(x, y)
+
+
+def concentric(fn):
+    """Outline, an inner outline and a core: fine kilim-style line work."""
+    ring1, ring2 = band(fn, 0.9), band(eroded(fn, 1.7), 0.6)
+    core = eroded(fn, 3.4)
+    return lambda x, y: ring1(x, y) or ring2(x, y) or core(x, y)
 
 
 def thick_path(points, r=1.1):
@@ -105,7 +131,8 @@ def eye(x, y):
 
 def comb(x, y):
     if y <= 4:
-        return x % 2 == 1 and 1 <= x <= 14
+        xi = math.floor(x + 0.5)
+        return xi % 2 == 1 and 1 <= xi <= 14
     if y <= 7:
         return True
     if y <= 14:
@@ -121,7 +148,7 @@ def hourglass(x, y):
 
 def amulet(x, y):
     if y > 11:
-        return y >= 13 and x % 2 == 0
+        return y >= 13 and math.floor(x + 0.5) % 2 == 0
     outer = abs(x - C) <= (y + 0.6) * (7.5 / 11.6)
     inner = y >= 4 and abs(x - C) <= (y - 3.0) * (7.5 / 11.6) * 0.62
     core = y >= 7 and abs(x - C) <= (y - 6.0) * 0.45
@@ -140,19 +167,13 @@ def horns(x, y):
 
 
 MOTIFS = [
-    ("goz", "Göz", "Eye", eye),
+    ("goz", "Göz", "Eye", concentric(eye)),
     ("tarak", "Tarak", "Comb", comb),
-    ("kum-saati", "Kum saati", "Hourglass", hourglass),
+    ("kum-saati", "Kum saati", "Hourglass", concentric(hourglass)),
     ("tilsim", "Tılsım", "Amulet", amulet),
-    ("yildiz", "Yıldız", "Star", star),
+    ("yildiz", "Yıldız", "Star", concentric(star)),
     ("koc-boynuzu", "Koç boynuzu", "Ram's horn", horns),
 ]
-
-
-def upscale(cells):
-    f = H // N
-    left = (W - N * f) // 2
-    return [[cells[y // f][(x - left) // f] if 0 <= x - left < N * f else 0 for x in range(W)] for y in range(H)]
 
 
 def main():
@@ -162,7 +183,7 @@ def main():
         out.append({"id": id_, "kind": "tamga", "tr": tr, "en": en, "credit": credit, "rows": to_braille(mask)})
     for id_, tr, en, fn in MOTIFS:
         out.append({"id": id_, "kind": "kilim", "tr": tr, "en": en, "credit": "traditional motif, drawn for tengri",
-                    "rows": to_braille(upscale(grid(fn)))})
+                    "rows": to_braille(raster(fn))})
     (ROOT / "data" / "motifs.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf8")
     for m in out:
         print(f"{m['id']:12} {m['tr']}")

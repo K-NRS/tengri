@@ -5,7 +5,7 @@ import { WHISPER, paint } from '../src/style.js'
 
 const USAGE = `tengri            a line from the Orkhon inscriptions or Kutadgu Bilig
 tengri <text>     Latin text in Old Turkic script (Turkish or scholarly spelling)
-tengri --tamga    tamgas and kilim motifs, one after another`
+tengri --tamga    tamgas and kilim motifs as a slow screensaver (Ctrl-C to stop)`
 
 const args = process.argv.slice(2)
 const color = Boolean(process.stdout.isTTY && !process.env.NO_COLOR)
@@ -15,13 +15,15 @@ if (args.includes('-h') || args.includes('--help')) {
 } else if (args.includes('--tamga')) {
   const { motifs } = await import('../src/motifs.js')
   const { play, canAnimate } = await import('../src/animate.js')
+  const credit = `\n  ${paint(WHISPER, color)(CREDIT)}\n`
   process.on('SIGINT', () => {
-    process.stdout.write('\x1b[?25h\n')
+    process.stdout.write(`\x1b[?25h\n${credit}`)
     process.exit(130)
   })
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty: canAnimate(process.stdout), color })
-  console.log(`\n  ${paint(WHISPER, color)(CREDIT)}\n`)
+  const tty = canAnimate(process.stdout)
+  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty, color, loops: tty ? Infinity : 1 })
+  console.log(credit)
 } else if (args.length > 0) {
   console.log(transliterate(args.join(' ')))
 } else {

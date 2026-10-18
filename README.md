@@ -82,7 +82,7 @@ Zero dependencies, Node 18+.
 npx tengri --tamga
 ```
 
-Nine Turkic tamgas and six kilim motifs wipe in one after another in braille, then dissolve. Ctrl-C stops it; piped or in CI it prints each one once.
+A slow screensaver: nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
 
 | | |
 |---|---|

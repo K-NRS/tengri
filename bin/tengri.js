@@ -13,5 +13,7 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log(transliterate(args.join(' ')))
 } else {
   const { randomQuote } = await import('../src/quotes.js')
-  console.log(formatQuote(randomQuote(), { color: process.stdout.isTTY && !process.env.NO_COLOR }))
+  const width = Math.max(30, Math.min((process.stdout.columns ?? 80) - 4, 72))
+  const color = process.stdout.isTTY && !process.env.NO_COLOR
+  console.log(`\n${formatQuote(randomQuote(), { color, width })}\n`)
 }

@@ -16,6 +16,7 @@ A random line from the Orkhon inscriptions or Kutadgu Bilig, in the original, mo
   When the blue sky above and the dark earth below were made, between the two the children of men were made as well.
 
   — Kül Tigin inscription, KT E 1 = BK E 2–3
+  Kerem Noras (noras.tech)
 ```
 
 Write your own:

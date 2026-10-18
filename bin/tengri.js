@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { transliterate } from '../src/transliterate.js'
-import { formatQuote } from '../src/format.js'
+import { formatQuote, MIN_WIDTH } from '../src/format.js'
 
 const USAGE = `tengri            a line from the Orkhon inscriptions or Kutadgu Bilig
 tengri <text>     Latin text in Old Turkic script (Turkish or scholarly spelling)`
@@ -13,7 +13,7 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log(transliterate(args.join(' ')))
 } else {
   const { randomQuote } = await import('../src/quotes.js')
-  const width = Math.max(30, Math.min((process.stdout.columns ?? 80) - 4, 72))
+  const width = Math.max(MIN_WIDTH, Math.min((process.stdout.columns ?? 80) - 8, 68))
   const color = process.stdout.isTTY && !process.env.NO_COLOR
   console.log(`\n${formatQuote(randomQuote(), { color, width })}\n`)
 }

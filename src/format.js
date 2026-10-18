@@ -1,13 +1,16 @@
 import { transliterate, SEPARATOR } from './transliterate.js'
 
-export const CREDIT = 'Kerem Noras (noras.tech)'
+export const CREDIT = 'made by Kerem Noras (noras.tech)'
+export const MIN_WIDTH = 32
 
 const GOLD = '1;38;5;179'
 const FAINT = '2'
-const WHISPER = '2;38;5;242'
 const ITALIC_FAINT = '2;3'
+const BORDER = '38;5;137'
+const WHISPER = '2;38;5;242'
 
-const paint = (code, enabled) => (text) => (enabled ? `\x1b[${code}m${text}\x1b[0m` : text)
+const PAD = 2
+const TITLE = 'tengri'
 
 const wrapWords = (text, width, sep = ' ') => {
   const lines = []
@@ -25,25 +28,42 @@ const wrapWords = (text, width, sep = ' ') => {
 }
 
 /**
- * One quote as terminal text, in three blocks: the original (script and
- * transcription for inscriptions), the Turkish and English renderings, and
- * the attribution.
+ * One quote in a rounded frame: original (script and transcription for
+ * inscriptions), Turkish and English renderings, attribution; the credit sits
+ * in the bottom border. `width` is the text width inside the frame.
  */
-export const formatQuote = (quote, { color = false, width = 72 } = {}) => {
-  const style = (code) => paint(code, color)
-  const original = quote.script
-    ? [
-        ...wrapWords(transliterate(quote.text), width, SEPARATOR).map(style(GOLD)),
-        ...wrapWords(quote.text, width).map(style(FAINT)),
-      ]
-    : wrapWords(quote.text, width).map(style(GOLD))
-  const renderings = [
-    ...wrapWords(quote.tr, width),
-    ...wrapWords(quote.en, width).map(style(ITALIC_FAINT)),
-  ]
-  const attribution = [style(FAINT)(`— ${quote.source}, ${quote.ref}`), style(WHISPER)(CREDIT)]
+export const formatQuote = (quote, { color = false, width = 68 } = {}) => {
+  const textWidth = Math.max(width, MIN_WIDTH)
+  const paint = (code) => (text) => (color ? `\x1b[${code}m${text}\x1b[0m` : text)
+  const wrap = (text, code, sep) => wrapWords(text, textWidth, sep).map((line) => ({ line, code }))
 
-  return [original, renderings, attribution]
-    .map((block) => block.map((line) => `  ${line}`).join('\n'))
-    .join('\n\n')
+  const original = quote.script
+    ? [...wrap(transliterate(quote.text), GOLD, SEPARATOR), ...wrap(quote.text, FAINT)]
+    : wrap(quote.text, GOLD)
+  const renderings = [...wrap(quote.tr, ''), ...wrap(quote.en, ITALIC_FAINT)]
+  const attribution = wrap(`— ${quote.source}, ${quote.ref}`, FAINT)
+
+  const border = paint(BORDER)
+  const inner = textWidth + PAD * 2
+  const row = ({ line, code } = { line: '', code: '' }) => {
+    const text = code ? paint(code)(line) : line
+    return `${border('│')}${' '.repeat(PAD)}${text}${' '.repeat(textWidth - [...line].length)}${' '.repeat(PAD)}${border('│')}`
+  }
+
+  const top = `╭─ ${TITLE} ${'─'.repeat(inner - TITLE.length - 3)}╮`
+  const label = ` ${CREDIT} `
+  const bottomFill = '─'.repeat(inner - label.length - 1)
+  const bottom = border(`╰${bottomFill}`) + paint(WHISPER)(label) + border('─╯')
+
+  return [
+    border(top),
+    row(),
+    ...original.map(row),
+    row(),
+    ...renderings.map(row),
+    row(),
+    ...attribution.map(row),
+    row(),
+    bottom,
+  ].join('\n')
 }

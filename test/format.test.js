@@ -12,9 +12,15 @@ const inscription = {
   en: 'english line',
 }
 
-test('inscription quote: script, transcription, tr, en, attribution, credit in order', () => {
-  const lines = formatQuote(inscription).split('\n').map((l) => l.trim())
-  assert.deepEqual(lines, [
+const contentLines = (out) =>
+  out
+    .split('\n')
+    .slice(1, -1)
+    .map((line) => line.slice(1, -1).trim())
+
+test('inscription quote: script, transcription, tr, en, attribution in order', () => {
+  assert.deepEqual(contentLines(formatQuote(inscription)), [
+    '',
     transliterate('täŋri'),
     'täŋri',
     '',
@@ -22,9 +28,19 @@ test('inscription quote: script, transcription, tr, en, attribution, credit in o
     'english line',
     '',
     '— Fixture stele, X 1',
-    'Kerem Noras (noras.tech)',
+    '',
   ])
-  assert.equal(CREDIT, 'Kerem Noras (noras.tech)')
+})
+
+test('rounded frame: every line has the same width, credit sits in the bottom border', () => {
+  const lines = formatQuote(inscription).split('\n')
+  assert.ok(lines[0].startsWith('╭─ tengri '))
+  assert.ok(lines[0].endsWith('╮'))
+  assert.ok(lines.at(-1).startsWith('╰'))
+  assert.ok(lines.at(-1).endsWith('╯'))
+  assert.ok(lines.at(-1).includes(CREDIT))
+  assert.equal(CREDIT, 'made by Kerem Noras (noras.tech)')
+  assert.equal(new Set(lines.map((l) => [...l].length)).size, 1)
 })
 
 test('non-inscription quote has no script line', () => {
@@ -33,16 +49,18 @@ test('non-inscription quote has no script line', () => {
   assert.ok(out.includes('täŋri'))
 })
 
-test('long lines wrap at the given width, script wraps between words', () => {
+test('long lines wrap, the frame keeps its width, script wraps between words', () => {
   const quote = {
     ...inscription,
-    text: 'tengri teg tengride bolmış türk bilge kagan',
-    tr: 'bir iki üç dört beş altı yedi sekiz dokuz on',
+    text: 'tengri teg tengride bolmış türk bilge kagan bu ödke olurtum',
+    tr: 'bir iki üç dört beş altı yedi sekiz dokuz on bir iki üç dört beş altı yedi sekiz dokuz on',
   }
-  const lines = formatQuote(quote, { width: 20 }).split('\n').map((l) => l.trim())
-  for (const line of lines) assert.ok([...line].length <= 24, line)
-  const scriptLines = lines.filter((l) => l.includes(SEPARATOR) || /^[\u{10C00}-\u{10C4F}]+$/u.test(l))
+  const out = formatQuote(quote, { width: 32 })
+  const lines = out.split('\n')
+  assert.equal(new Set(lines.map((l) => [...l].length)).size, 1)
+  const scriptLines = contentLines(out).filter((l) => /^[\u{10C00}-\u{10C4F}⁚]+$/u.test(l))
   assert.ok(scriptLines.length > 1)
+  for (const l of scriptLines) assert.equal(l.startsWith(SEPARATOR) || l.endsWith(SEPARATOR), false)
 })
 
 test('no ANSI escapes unless color is on', () => {

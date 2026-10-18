@@ -9,14 +9,19 @@ npx tengri
 A random line from the Orkhon inscriptions or Kutadgu Bilig, in the original, modern Turkish and English:
 
 ```
-  𐰇𐰔𐰀⁚𐰚𐰇𐰚⁚𐱅𐰭𐰼𐰃⁚𐰽𐰺𐰀⁚𐰖𐰍𐰃𐰔⁚𐰘𐰼⁚𐰴𐰃𐰞𐰣𐱃𐰴𐰑𐰀⁚𐰚𐰃𐰤⁚𐰺𐰀⁚𐰚𐰃𐱁𐰃⁚𐰆𐰍𐰞𐰃⁚𐰴𐰃𐰞𐰣𐰢𐱁
-  üze kök tengri asra yağız yer kılıntukda ekin ara kişi oğlı kılınmış
-
-  Üstte mavi gök, altta yağız yer var edilirken, ikisinin arasına insanoğlu da var edilmiş.
-  When the blue sky above and the dark earth below were made, between the two the children of men were made as well.
-
-  — Kül Tigin inscription, KT E 1 = BK E 2–3
-  Kerem Noras (noras.tech)
+╭─ tengri ───────────────────────────────────────────────────────────────╮
+│                                                                        │
+│  𐰇𐰔𐰀⁚𐰚𐰇𐰚⁚𐱅𐰭𐰼𐰃⁚𐰽𐰺𐰀⁚𐰖𐰍𐰃𐰔⁚𐰘𐰼⁚𐰴𐰃𐰞𐰣𐱃𐰴𐰑𐰀⁚𐰚𐰃𐰤⁚𐰺𐰀⁚𐰚𐰃𐱁𐰃⁚𐰆𐰍𐰞𐰃⁚𐰴𐰃𐰞𐰣𐰢𐱁             │
+│  üze kök tengri asra yağız yer kılıntukda ekin ara kişi oğlı kılınmış  │
+│                                                                        │
+│  Üstte mavi gök, altta yağız yer var edilirken, ikisinin arasına       │
+│  insanoğlu da var edilmiş.                                             │
+│  When the blue sky above and the dark earth below were made, between   │
+│  the two the children of men were made as well.                        │
+│                                                                        │
+│  — Kül Tigin inscription, KT E 1 = BK E 2–3                            │
+│                                                                        │
+╰───────────────────────────────────── made by Kerem Noras (noras.tech) ─╯
 ```
 
 Write your own:

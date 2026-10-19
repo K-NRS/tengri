@@ -1,7 +1,7 @@
 import { transliterate, SEPARATOR } from './transliterate.js'
 import { GOLD, FAINT, ITALIC_FAINT, BORDER, WHISPER, paint as paintCode } from './style.js'
 
-export const CREDIT = 'made by Kerem Noras (noras.tech)'
+export const CREDIT = 'noras.tech'
 export const MIN_WIDTH = 32
 
 

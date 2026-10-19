@@ -54,7 +54,7 @@ A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Ol
 │                                                                        │
 │  — Kül Tigin inscription, KT E 1 = BK E 2–3                            │
 │                                                                        │
-╰───────────────────────────────────── made by Kerem Noras (noras.tech) ─╯
+╰─────────────────────────────────────────────────────────── noras.tech ─╯
 ```
 
 Write your own:

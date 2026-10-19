@@ -39,7 +39,7 @@ test('rounded frame: every line has the same width, credit sits in the bottom bo
   assert.ok(lines.at(-1).startsWith('╰'))
   assert.ok(lines.at(-1).endsWith('╯'))
   assert.ok(lines.at(-1).includes(CREDIT))
-  assert.equal(CREDIT, 'made by Kerem Noras (noras.tech)')
+  assert.equal(CREDIT, 'noras.tech')
   assert.equal(new Set(lines.map((l) => [...l].length)).size, 1)
 })
 

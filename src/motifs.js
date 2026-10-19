@@ -1,7 +1,12 @@
 import { readFileSync } from 'node:fs'
 
-/** @type {import('./index.js').Motif[]} */
-export const motifs = JSON.parse(readFileSync(new URL('../data/motifs.json', import.meta.url), 'utf8'))
+const load = (name) => JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), 'utf8'))
 
-/** The opening emblem: `large` (30 rows) and `small` (16 rows) braille versions. */
-export const emblem = JSON.parse(readFileSync(new URL('../data/emblem.json', import.meta.url), 'utf8'))
+// `tiers` are the same drawing at growing sizes (rows of braille); `rows` is the smallest.
+const withRows = (item) => ({ ...item, rows: item.tiers[0] })
+
+/** @type {import('./index.js').Motif[]} */
+export const motifs = load('motifs').map(withRows)
+
+/** The opening emblem, in three sizes. */
+export const emblem = withRows(load('emblem'))

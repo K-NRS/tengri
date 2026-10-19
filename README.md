@@ -82,7 +82,9 @@ Zero dependencies, Node 18+.
 npx tengri --tamga
 ```
 
-A slow screensaver. It opens with the Tengrist symbol (large when the window is at least 66 columns by 36 rows, small otherwise), then nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
+A slow, full-screen screensaver on the terminal's alternate screen, centred and redrawn to your window (resize it and it follows). It opens with the Tengrist symbol, then nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Any key stops it and brings your terminal back as it was.
+
+The drawings come in sizes and the biggest one that fits the window is used (the emblem up to 96×48 characters, the rest up to 96×32). The smallest needs 52 columns by 20 rows; below that, or when piped, each one is printed once.
 
 | | |
 |---|---|

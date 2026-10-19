@@ -90,12 +90,12 @@ N = 16
 C = (N - 1) / 2
 
 
-def raster(fn):
-    """Sample fn (16x16 design space) on the dot grid, centred, 4 dots per unit."""
-    side = H
-    left = (W - side) // 2
-    mask = [[0] * W for _ in range(H)]
-    for y in range(H):
+def raster(fn, w=W, h=H):
+    """Sample fn (16x16 design space) on a w x h dot grid, centred."""
+    side = h
+    left = (w - side) // 2
+    mask = [[0] * w for _ in range(h)]
+    for y in range(h):
         for x in range(side):
             gx, gy = (x + 0.5) * N / side - 0.5, (y + 0.5) * N / side - 0.5
             mask[y][left + x] = 1 if fn(gx, gy) else 0
@@ -186,28 +186,32 @@ MOTIFS = [
 ]
 
 
+# dot sizes of the two motif tiers: 48 x 16 and 96 x 32 braille cells
+TIERS = [(96, 64, 6), (192, 128, 10)]
+
+
 def main():
     out = []
     for id_, tr, en, svg, credit in TAMGAS:
-        mask = fit(render_svg(ROOT / svg))
-        out.append({"id": id_, "kind": "tamga", "tr": tr, "en": en, "credit": credit, "rows": to_braille(mask)})
+        mask = render_svg(ROOT / svg)
+        tiers = [to_braille(fit(mask, w, h, pad)) for w, h, pad in TIERS]
+        out.append({"id": id_, "kind": "tamga", "tr": tr, "en": en, "credit": credit, "tiers": tiers})
     for id_, tr, en, fn in MOTIFS:
+        tiers = [to_braille(raster(fn, w, h)) for w, h, _ in TIERS]
         out.append({"id": id_, "kind": "kilim", "tr": tr, "en": en, "credit": "traditional motif, drawn for tengri",
-                    "rows": to_braille(raster(fn))})
+                    "tiers": tiers})
     symbol = render_svg(ROOT / "docs" / "tengrism-symbol.svg")
     emblem = {
         "id": "tengrism",
         "tr": "Tengri sembolü",
         "en": "Tengrist symbol",
         "credit": "Modanung, CC0",
-        "large": to_braille(fit(symbol, 120, 120, 4)),
-        "small": to_braille(fit(symbol, 64, 64, 2)),
+        # 32 x 16, 60 x 30 and 96 x 48 braille cells
+        "tiers": [to_braille(fit(symbol, side, side, pad)) for side, pad in [(64, 2), (120, 4), (192, 4)]],
     }
     (ROOT / "data" / "emblem.json").write_text(json.dumps(emblem, ensure_ascii=False, indent=1) + "\n", encoding="utf8")
     (ROOT / "data" / "motifs.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf8")
-    for m in out:
-        print(f"{m['id']:12} {m['tr']}")
-        print("\n".join("  " + r for r in m["rows"]))
+    print("motifs:", len(out), "| tiers per motif:", len(TIERS), "| emblem tiers:", len(emblem["tiers"]))
 
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@ import { paint } from './style.js'
 
 const HIDDEN = ' '
 const WIDTH = 52
-const LINE_WIDTH = WIDTH + 2
 const FRAME_ROWS = 18 // 16 art rows, a blank line, the caption
 
 const REVEAL_STEPS = 48
@@ -12,13 +11,17 @@ const FRAME_MS = 70
 const HOLD_FRAME_MS = 100
 const GAP_MS = 700
 
+const ENTER = '\x1b[?1049h\x1b[?25l\x1b[2J'
+const LEAVE = '\x1b[?25h\x1b[?1049l'
+const CLEAR = '\x1b[2J'
+
 // 256-colour golds, dark to bright and back: the symbol slowly breathes while it is held.
 const BREATH = [136, 137, 172, 178, 179, 214, 220, 221, 222, 221, 220, 214, 179, 178, 172, 137]
 const goldAt = (tone) => `1;38;5;${BREATH[((tone % BREATH.length) + BREATH.length) % BREATH.length]}`
 
-/** In-place redraw breaks when a line wraps or the frame is taller than the window. */
+/** The screen needs a TTY that can hold the smallest frame. */
 export const canAnimate = ({ isTTY, columns, rows }) =>
-  Boolean(isTTY) && (columns ?? 80) >= LINE_WIDTH && (rows ?? 40) >= FRAME_ROWS + 2
+  Boolean(isTTY) && (columns ?? 80) >= WIDTH && (rows ?? 40) >= FRAME_ROWS + 2
 
 const hash = (n) => {
   let x = Math.imul(n + 1, 2654435761) >>> 0
@@ -49,81 +52,92 @@ export const dissolve = (rows, t, seed = 0) =>
   mapCells(rows, (x, y) => hash(y * 1000 + x + seed * 7919) >= t)
 
 const textWidth = (rows) => Math.max(WIDTH, [...rows[0]].length)
+const frameHeight = (rows) => rows.length + 2
 
-/** The emblem is drawn large when the window can hold it, small otherwise. */
-export const introFor = (emblem, { columns, rows } = {}) => ({
-  ...emblem,
-  rows: (columns ?? 80) >= 66 && (rows ?? 40) >= 36 ? emblem.large : emblem.small,
-})
+/** The biggest drawing of an item that fits the window, with a row to spare. */
+export const pickTier = ({ tiers }, { columns = 80, rows = 40 } = {}) =>
+  [...tiers].reverse().find((t) => textWidth(t) <= columns && frameHeight(t) <= rows - 1) ?? tiers[0]
 
 const center = (text, width) => {
   const gap = Math.max(0, width - [...text].length)
   return ' '.repeat(Math.floor(gap / 2)) + text + ' '.repeat(Math.ceil(gap / 2))
 }
 
-/** The lines of one frame: art, then the caption once `captionOn`. Credits live in the data and the README. */
-export const compose = (motif, art, { captionOn = true, color = false, tone = 8 } = {}) => {
+/** The lines of one frame: art, a blank line, then the caption once `captionOn`. Credits live in the data and the README. */
+export const compose = (motif, art, { captionOn = true, color = false, tone = 8, indent = 2 } = {}) => {
   const width = textWidth(art)
   const gold = paint(goldAt(tone), color)
   const blank = ' '.repeat(width)
   const caption = captionOn ? [paint(goldAt(8), color)(center(`${motif.tr} · ${motif.en}`, width))] : [blank]
-  return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => `  ${line}`)
+  return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => ' '.repeat(indent) + line)
 }
 
-const up = (n) => `\x1b[${n}A\r`
-const clearLine = '\x1b[2K'
+const STOP = Symbol('stop')
 
 /**
- * A slow screensaver. The optional `intro` (the emblem) opens it once; then
- * each motif wipes in, glows while held, and dissolves, and the list repeats
- * `loops` times (Infinity until interrupted). Without a TTY everything is
- * printed once, with no escape codes.
+ * A slow full-screen screensaver on the terminal's alternate screen, centred
+ * and redrawn to the current window size. The optional `intro` (the emblem)
+ * opens it once; then each motif wipes in, glows while held, and dissolves,
+ * and the list repeats `loops` times (Infinity until `signal` aborts). Without
+ * a TTY everything is printed once, smallest size, with no escape codes.
  */
-export const play = async (list, { out, sleep, tty, color = false, loops = 1, intro }) => {
+export const play = async (
+  list,
+  { out, sleep, tty, color = false, loops = 1, intro, size = () => ({}), signal },
+) => {
   if (!tty) {
     for (const motif of intro ? [intro, ...list] : list) {
-      out(compose(motif, motif.rows, { color }).join('\n') + '\n\n')
+      out(compose(motif, motif.tiers[0], { color }).join('\n') + '\n\n')
     }
     return
   }
-  out('\x1b[?25l')
+  out(ENTER)
+  let layout = ''
+  let tone = 0
+  const tick = async (ms) => {
+    await sleep(ms)
+    if (signal?.aborted) throw STOP
+  }
+  const draw = (motif, shape, opts) => {
+    const window = size()
+    const art = pickTier(motif, window)
+    const lines = compose(motif, shape(art), { ...opts, color, tone: tone++ >> 2, indent: 0 })
+    const width = textWidth(art)
+    const key = `${window.columns}x${window.rows}:${width}x${lines.length}`
+    if (key !== layout) out(CLEAR)
+    layout = key
+    const top = Math.max(1, Math.floor(((window.rows ?? 40) - lines.length) / 2) + 1)
+    const left = Math.max(1, Math.floor(((window.columns ?? 80) - width) / 2) + 1)
+    out(lines.map((line, i) => `\x1b[${top + i};${left}H${line}`).join(''))
+  }
+  const scene = async (motif, { mode, seed, speed = 1 }) => {
+    const reveals = Math.round(REVEAL_STEPS * speed)
+    const holds = Math.round(HOLD_FRAMES * speed)
+    const dissolves = Math.round(DISSOLVE_STEPS * speed)
+    for (let s = 1; s <= reveals; s++) {
+      draw(motif, (art) => reveal(art, s / reveals, mode), { captionOn: false })
+      await tick(FRAME_MS)
+    }
+    for (let f = 0; f < holds; f++) {
+      draw(motif, (art) => art, {})
+      await tick(HOLD_FRAME_MS)
+    }
+    for (let s = 1; s <= dissolves; s++) {
+      draw(motif, (art) => dissolve(art, s / dissolves, seed), { captionOn: s < dissolves / 3 })
+      await tick(FRAME_MS)
+    }
+    await tick(GAP_MS)
+  }
   try {
-    let height = 0
-    const draw = (lines) => {
-      let text = (height ? up(height) : '') + lines.map((l) => clearLine + l).join('\n') + '\n'
-      if (lines.length < height) {
-        const extra = height - lines.length
-        text += (clearLine + '\n').repeat(extra) + up(extra)
-      }
-      out(text)
-      height = lines.length
-    }
-    let tone = 0
-    const scene = async (motif, { mode, seed, speed = 1 }) => {
-      const reveals = Math.round(REVEAL_STEPS * speed)
-      const holds = Math.round(HOLD_FRAMES * speed)
-      const dissolves = Math.round(DISSOLVE_STEPS * speed)
-      for (let s = 1; s <= reveals; s++) {
-        draw(compose(motif, reveal(motif.rows, s / reveals, mode), { captionOn: false, color, tone: tone++ >> 2 }))
-        await sleep(FRAME_MS)
-      }
-      for (let f = 0; f < holds; f++) {
-        draw(compose(motif, motif.rows, { color, tone: tone++ >> 2 }))
-        await sleep(HOLD_FRAME_MS)
-      }
-      for (let s = 1; s <= dissolves; s++) {
-        draw(compose(motif, dissolve(motif.rows, s / dissolves, seed), { captionOn: s < dissolves / 3, color, tone: tone++ >> 2 }))
-        await sleep(FRAME_MS)
-      }
-      await sleep(GAP_MS)
-    }
     if (intro) await scene(intro, { mode: 'radial', seed: 99, speed: 1.6 })
     for (let round = 0; round < loops; round++) {
       for (const [i, motif] of list.entries()) {
         await scene(motif, { mode: i % 2 ? 'radial' : 'diagonal', seed: i + round })
       }
     }
+  } catch (error) {
+    if (error !== STOP) throw error
   } finally {
-    out('\x1b[?25h')
+    out(LEAVE)
   }
 }

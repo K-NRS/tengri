@@ -3,7 +3,7 @@ import { WHISPER, CLEAR_LINE, paint, up } from './style.js'
 
 const HIDE = '\x1b[?25l'
 const SHOW = '\x1b[?25h'
-const HINT = 'space · →  next     ←  back     q  quit'
+const HINT = 'space · →  next     ←  back     t  tamga     q  quit'
 
 const KEYS = new Map([
   [' ', 'next'],
@@ -12,13 +12,15 @@ const KEYS = new Map([
   ['\x1b[B', 'next'],
   ['\x1b[D', 'prev'],
   ['\x1b[A', 'prev'],
+  ['t', 'tamga'],
+  ['T', 'tamga'],
   ['q', 'quit'],
   ['Q', 'quit'],
   ['\x03', 'quit'],
   ['\x1b', 'quit'],
 ])
 
-/** What a chunk of keyboard input means: 'next', 'prev', 'quit', or null. */
+/** What a chunk of keyboard input means: 'next', 'prev', 'tamga', 'quit', or null. */
 export const keyAction = (chunk) => KEYS.get(chunk) ?? null
 
 const shuffle = (list, random) => {
@@ -32,10 +34,12 @@ const shuffle = (list, random) => {
 
 /**
  * Shows one quote at a time in place: space, enter or → for the next one,
- * ← for the one before, q to quit. `keys` is an async iterable of input
- * chunks. The last quote stays on screen, without the hint.
+ * ← for the one before, t for the tamga screensaver, q to quit. `keys` is an
+ * async iterable of input chunks; `onTamga` runs the screensaver and resolves
+ * to the key that stopped it (q or Ctrl-C then quit, any other key comes back
+ * here). The last quote stays on screen, without the hint.
  */
-export const browse = async (list, { out, keys, size = () => ({}), color = false, random = Math.random }) => {
+export const browse = async (list, { out, keys, size = () => ({}), color = false, random = Math.random, onTamga }) => {
   const deck = shuffle(list, random)
   let at = 0
   let height = 0
@@ -58,6 +62,13 @@ export const browse = async (list, { out, keys, size = () => ({}), color = false
       const action = keyAction(String(chunk))
       if (action === 'quit') break
       if (!action) continue
+      if (action === 'tamga') {
+        if (!onTamga) continue
+        const stoppedBy = await onTamga()
+        if (stoppedBy && keyAction(stoppedBy) === 'quit') break
+        draw({ hint: true })
+        continue
+      }
       at = (at + (action === 'next' ? 1 : deck.length - 1)) % deck.length
       draw({ hint: true })
     }

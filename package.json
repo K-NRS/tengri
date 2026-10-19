@@ -35,7 +35,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test --test-timeout=60000"
   },
   "repository": {
     "type": "git",

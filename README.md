@@ -39,7 +39,7 @@ Old Turkic (Göktürk, Orkhon) script in your terminal.
 npx tengri
 ```
 
-A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Old Turkic script, Latin transcription, modern Turkish and English. Press space or → for another one, ← to go back, q to quit; the last one stays on screen. Piped, it prints a single random line.
+A random line from the Orkhon inscriptions or Kutadgu Bilig in a small frame: Old Turkic script, Latin transcription, modern Turkish and English. It opens with a short look at the Tengri symbol (any key skips it). Then press space or → for another line, ← to go back, **t** for the tamga screensaver (any key brings you back), q to quit; the last line stays on screen. Piped, it prints a single random line.
 
 ```
 ╭─ 𐱅𐰭𐰼𐰃 ─────────────────────────────────────────────────────────────────╮

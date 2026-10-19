@@ -77,13 +77,13 @@ const STOP = Symbol('stop')
 /**
  * A slow full-screen screensaver on the terminal's alternate screen, centred
  * and redrawn to the current window size. The optional `intro` (the emblem)
- * opens it once; then each motif wipes in, glows while held, and dissolves,
- * and the list repeats `loops` times (Infinity until `signal` aborts). Without
+ * opens it once (`introSpeed` scales its length); then each motif wipes in,
+ * glows while held, and dissolves, and the list repeats `loops` times (Infinity until `signal` aborts). Without
  * a TTY everything is printed once, smallest size, with no escape codes.
  */
 export const play = async (
   list,
-  { out, sleep, tty, color = false, loops = 1, intro, size = () => ({}), signal },
+  { out, sleep, tty, color = false, loops = 1, intro, introSpeed = 1.6, size = () => ({}), signal },
 ) => {
   if (!tty) {
     for (const motif of intro ? [intro, ...list] : list) {
@@ -110,7 +110,7 @@ export const play = async (
     const left = Math.max(1, Math.floor(((window.columns ?? 80) - width) / 2) + 1)
     out(lines.map((line, i) => `\x1b[${top + i};${left}H${line}`).join(''))
   }
-  const scene = async (motif, { mode, seed, speed = 1 }) => {
+  const scene = async (motif, { mode, seed, speed = 1, gap = true }) => {
     const reveals = Math.round(REVEAL_STEPS * speed)
     const holds = Math.round(HOLD_FRAMES * speed)
     const dissolves = Math.round(DISSOLVE_STEPS * speed)
@@ -126,10 +126,10 @@ export const play = async (
       draw(motif, (art) => dissolve(art, s / dissolves, seed), { captionOn: s < dissolves / 3 })
       await tick(FRAME_MS)
     }
-    await tick(GAP_MS)
+    if (gap) await tick(GAP_MS)
   }
   try {
-    if (intro) await scene(intro, { mode: 'radial', seed: 99, speed: 1.6 })
+    if (intro) await scene(intro, { mode: 'radial', seed: 99, speed: introSpeed, gap: list.length > 0 })
     for (let round = 0; round < loops; round++) {
       for (const [i, motif] of list.entries()) {
         await scene(motif, { mode: i % 2 ? 'radial' : 'diagonal', seed: i + round })

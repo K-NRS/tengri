@@ -66,6 +66,15 @@ test('emblem data: three sizes and a credit', () => {
   assert.match(emblem.credit, /CC0/)
 })
 
+test('the emblem has no caption, so its frame is only the drawing', () => {
+  assert.equal(emblem.caption, false)
+  for (const art of emblem.tiers) {
+    const lines = compose(emblem, art)
+    assert.equal(lines.length, art.length)
+    assert.equal(lines.join('\n').includes(emblem.tr), false)
+  }
+})
+
 test('pickTier takes the biggest drawing the window can hold', () => {
   const [small, large, xl] = emblem.tiers
   assert.equal(pickTier(emblem, { columns: 200, rows: 80 }), xl)
@@ -93,7 +102,9 @@ test('without a TTY the intro and every motif print once, smallest size, no esca
   await play(motifs, { out: (s) => chunks.push(s), sleep: noSleep, tty: false, intro: emblem })
   const text = chunks.join('')
   assert.equal(text.includes('\x1b'), false)
-  assert.ok(text.indexOf(emblem.tr) >= 0 && text.indexOf(emblem.tr) < text.indexOf(motifs[0].tr))
+  const mark = emblem.tiers[0].find((row) => /[⠁-⣿]/u.test(row))
+  assert.ok(text.indexOf(mark) >= 0 && text.indexOf(mark) < text.indexOf(motifs[0].tr), 'the emblem comes first')
+  assert.equal(text.includes(emblem.tr), false, 'with no name under it')
   for (const m of motifs) assert.ok(text.includes(m.tr), m.id)
 })
 

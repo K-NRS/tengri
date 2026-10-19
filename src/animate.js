@@ -63,13 +63,18 @@ const center = (text, width) => {
   return ' '.repeat(Math.floor(gap / 2)) + text + ' '.repeat(Math.ceil(gap / 2))
 }
 
-/** The lines of one frame: art, a blank line, then the caption once `captionOn`. Credits live in the data and the README. */
+/**
+ * The lines of one frame: art, a blank line, then the caption once `captionOn`
+ * (none at all when the item says `caption: false`). Credits live in the data and the README.
+ */
 export const compose = (motif, art, { captionOn = true, color = false, tone = 8, indent = 2 } = {}) => {
   const width = textWidth(art)
   const gold = paint(goldAt(tone), color)
+  const pad = ' '.repeat(indent)
+  if (motif.caption === false) return art.map((row) => pad + gold(center(row, width)))
   const blank = ' '.repeat(width)
   const caption = captionOn ? [paint(goldAt(8), color)(center(`${motif.tr} · ${motif.en}`, width))] : [blank]
-  return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => ' '.repeat(indent) + line)
+  return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => pad + line)
 }
 
 const STOP = Symbol('stop')

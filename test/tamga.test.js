@@ -51,7 +51,7 @@ test('a read that is still waiting is released, so the next key is not swallowed
   await runTamga({
     list: [],
     intro: emblem,
-    introSpeed: 0.3,
+    introSpeed: 0.45,
     out: () => {},
     read: (signal) =>
       new Promise((resolve) => signal.addEventListener('abort', () => ((released = true), resolve(null)), { once: true })),
@@ -66,14 +66,15 @@ test('an intro alone plays once and ends by itself, without a key', async () => 
   const key = await runTamga({
     list: [],
     intro: emblem,
-    introSpeed: 0.3,
+    introSpeed: 0.45,
     out: (s) => chunks.push(s),
     read: () => new Promise(() => {}),
     sleep: async () => {},
     tty: true,
   })
   assert.equal(key, null)
-  assert.ok(chunks.some((c) => c.includes(emblem.tr)))
+  const mark = emblem.tiers[0].find((row) => /[⠁-⣿]/u.test(row)).trim()
+  assert.ok(chunks.some((c) => c.includes(mark.slice(0, 8))), 'the emblem was drawn')
   assert.equal(chunks.at(-1), LEAVE)
 })
 
@@ -91,8 +92,8 @@ test('the short intro is much shorter than the screensaver intro', async () => {
     })
     return total
   }
-  const [short, long] = [await time(0.3), await time(1.6)]
-  assert.ok(short < 4000, `${short} ms`)
+  const [short, long] = [await time(0.45), await time(1.6)]
+  assert.ok(short > 3000 && short < 5000, `${short} ms`)
   assert.ok(long > 3 * short)
 })
 

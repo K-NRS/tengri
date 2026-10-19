@@ -77,7 +77,7 @@ if (args.includes('-h') || args.includes('--help')) {
     })
   try {
     // The Tengri emblem opens the session; any key skips it (q quits).
-    const skipped = await screen([], { introSpeed: 0.3 })
+    const skipped = await screen([], { introSpeed: 0.45 })
     if (!skipped || keyAction(skipped) !== 'quit') {
       await browse(quotes, { out, keys: input.keys, size, color, onTamga: () => screen(motifs) })
     }

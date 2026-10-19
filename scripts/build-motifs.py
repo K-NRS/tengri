@@ -20,7 +20,6 @@ BITS = [[0x01, 0x08], [0x02, 0x10], [0x04, 0x20], [0x40, 0x80]]
 
 # id, Turkish name, English name, svg file, credit
 TAMGAS = [
-    ("ashina", "Aşina damgası", "Ashina clan", "docs/ashina-tamga.svg", "Sebirkhan, CC0"),
     ("kayi", "Kayı boyu damgası", "Kayı tribe", "docs/tamgas/kayi-2.svg", "SAİT71, public domain"),
     ("kipchak", "Kıpçak damgası", "Kipchak", "docs/tamgas/kipchak.svg", "Devlet Geray, CC0"),
     ("kereyit", "Kereyit damgası", "Kereyit", "docs/tamgas/kereyit.svg", "Devlet Geray, CC0"),

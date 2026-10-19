@@ -82,11 +82,10 @@ Zero dependencies, Node 18+.
 npx tengri --tamga
 ```
 
-A slow screensaver: nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
+A slow screensaver: eight Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
 
 | | |
 |---|---|
-| Aşina | Sebirkhan, CC0 |
 | Kayı | SAİT71, public domain |
 | Kıpçak, Kereyit, Kırk, Kıyat, Konrat, Barın, Giray | Devlet Geray, CC0 |
 | Göz, tarak, kum saati, tılsım, yıldız, koç boynuzu | traditional kilim motifs, redrawn for this package |
@@ -128,10 +127,6 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 - *Kutadgu Bilig* is written in Karakhanid Turkic with Arabic letters, never in Göktürk script. The Old Turkic letters shown for it are a **stylization**: the same rules as above applied to the Latin text, nothing a scribe ever wrote. The data marks it as `script: "stylized"`. Couplet numbers follow the common Arat-based numbering; the Fergana manuscript numbers differ (211 is 208 there).
 
 ## Ornaments
-
-<img src="docs/ashina-tamga.svg" alt="Tamga of the Ashina clan" width="180">
-
-*Tamga attributed to the Ashina clan, the ruling clan of the Göktürks. Drawing: [Sebirkhan](https://commons.wikimedia.org/wiki/File:Ashina_Tribe_Tamga.svg), CC0.*
 
 Tamgas have no Unicode block, so the frame uses the Old Turkic word separator (⁚) as its only ornament and the animation draws tamgas and motifs as braille bitmaps.
 

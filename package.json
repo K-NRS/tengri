@@ -1,6 +1,6 @@
 {
   "name": "tengri",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Old Turkic (Göktürk / Orkhon) script transliterator, plus a random line from the Orkhon inscriptions or Kutadgu Bilig in Turkish and English. Try: npx tengri",
   "keywords": [
     "göktürk",

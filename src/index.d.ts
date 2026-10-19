@@ -41,3 +41,16 @@ export interface Motif {
 }
 
 export const motifs: Motif[]
+
+export interface Emblem {
+  id: string
+  tr: string
+  en: string
+  credit: string
+  /** 30 rows of 60 braille characters */
+  large: string[]
+  /** 16 rows of 32 braille characters */
+  small: string[]
+}
+
+export const emblem: Emblem

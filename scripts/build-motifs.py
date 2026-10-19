@@ -33,11 +33,11 @@ TAMGAS = [
 
 
 def to_braille(mask):
-    """mask: H x W list of 0/1 rows -> list of braille strings."""
+    """mask: list of 0/1 rows -> list of braille strings."""
     rows = []
-    for cy in range(0, H, 4):
+    for cy in range(0, len(mask), 4):
         line = ""
-        for cx in range(0, W, 2):
+        for cx in range(0, len(mask[0]), 2):
             bits = 0
             for dy in range(4):
                 for dx in range(2):
@@ -71,17 +71,17 @@ def render_svg(path):
         return mask
 
 
-def fit(mask):
+def fit(mask, w=W, h=H, pad=6):
     box = mask.getbbox()
     assert box, "empty mask"
     mask = mask.crop(box)
-    scale = min((W - 6) / mask.width, (H - 6) / mask.height)
-    w, h = max(1, round(mask.width * scale)), max(1, round(mask.height * scale))
-    mask = mask.resize((w, h), Image.LANCZOS)
-    canvas = Image.new("L", (W, H), 0)
-    canvas.paste(mask, ((W - w) // 2, (H - h) // 2))
+    scale = min((w - pad) / mask.width, (h - pad) / mask.height)
+    mw, mh = max(1, round(mask.width * scale)), max(1, round(mask.height * scale))
+    mask = mask.resize((mw, mh), Image.LANCZOS)
+    canvas = Image.new("L", (w, h), 0)
+    canvas.paste(mask, ((w - mw) // 2, (h - mh) // 2))
     px = canvas.load()
-    return [[1 if px[x, y] > 100 else 0 for x in range(W)] for y in range(H)]
+    return [[1 if px[x, y] > 100 else 0 for x in range(w)] for y in range(h)]
 
 
 # --- kilim motifs: drawn on a 16x16 grid, scaled x3 -------------------------
@@ -194,6 +194,16 @@ def main():
     for id_, tr, en, fn in MOTIFS:
         out.append({"id": id_, "kind": "kilim", "tr": tr, "en": en, "credit": "traditional motif, drawn for tengri",
                     "rows": to_braille(raster(fn))})
+    symbol = render_svg(ROOT / "docs" / "tengrism-symbol.svg")
+    emblem = {
+        "id": "tengrism",
+        "tr": "Tengri sembolü",
+        "en": "Tengrist symbol",
+        "credit": "Modanung, CC0",
+        "large": to_braille(fit(symbol, 120, 120, 4)),
+        "small": to_braille(fit(symbol, 64, 64, 2)),
+    }
+    (ROOT / "data" / "emblem.json").write_text(json.dumps(emblem, ensure_ascii=False, indent=1) + "\n", encoding="utf8")
     (ROOT / "data" / "motifs.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf8")
     for m in out:
         print(f"{m['id']:12} {m['tr']}")

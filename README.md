@@ -82,7 +82,7 @@ Zero dependencies, Node 18+.
 npx tengri --tamga
 ```
 
-A slow screensaver: nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
+A slow screensaver. It opens with the Tengrist symbol (large when the window is at least 66 columns by 36 rows, small otherwise), then nine Turkic tamgas and six kilim motifs, drawn in braille, wipe in (diagonally, then from the centre, alternating), glow while they are held and dissolve, one after another and then around again. Each takes about ten seconds. Ctrl-C stops it. It needs a terminal of at least 54 columns and 21 rows; otherwise, or when piped, it prints each motif once.
 
 | | |
 |---|---|
@@ -131,7 +131,7 @@ It spells *tengri*, *bodun*, *asra* as the stones do. It will not match every ca
 
 Tamgas have no Unicode block, so the frame uses the Old Turkic word separator (⁚) as its only ornament and the animation draws tamgas and motifs as braille bitmaps.
 
-The emblem at the top is the Tengrist symbol, rendered to braille from [Tengrism1.svg](https://commons.wikimedia.org/wiki/File:Tengrism1.svg) (vector by Modanung, CC0; the design is credited on Commons to tengry.org, marked public domain). The vector is in [docs/tengrism-symbol.svg](docs/tengrism-symbol.svg).
+The emblem at the top, which also opens `--tamga`, is the Tengrist symbol, rendered to braille from [Tengrism1.svg](https://commons.wikimedia.org/wiki/File:Tengrism1.svg) (vector by Modanung, CC0; the design is credited on Commons to tengry.org, marked public domain). The vector is in [docs/tengrism-symbol.svg](docs/tengrism-symbol.svg).
 
 ## License
 

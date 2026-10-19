@@ -13,8 +13,8 @@ const color = Boolean(process.stdout.isTTY && !process.env.NO_COLOR)
 if (args.includes('-h') || args.includes('--help')) {
   console.log(USAGE)
 } else if (args.includes('--tamga')) {
-  const { motifs } = await import('../src/motifs.js')
-  const { play, canAnimate } = await import('../src/animate.js')
+  const { motifs, emblem } = await import('../src/motifs.js')
+  const { play, canAnimate, introFor } = await import('../src/animate.js')
   const credit = `\n  ${paint(WHISPER, color)(CREDIT)}\n`
   process.on('SIGINT', () => {
     process.stdout.write(`\x1b[?25h\n${credit}`)
@@ -22,7 +22,8 @@ if (args.includes('-h') || args.includes('--help')) {
   })
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const tty = canAnimate(process.stdout)
-  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty, color, loops: tty ? Infinity : 1 })
+  const intro = introFor(emblem, process.stdout)
+  await play(motifs, { out: (text) => process.stdout.write(text), sleep, tty, color, loops: tty ? Infinity : 1, intro })
   console.log(credit)
 } else if (args.length > 0) {
   console.log(transliterate(args.join(' ')))

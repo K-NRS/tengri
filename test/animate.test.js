@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { reveal, dissolve, compose, play, canAnimate } from '../src/animate.js'
-import { motifs } from '../src/motifs.js'
+import { reveal, dissolve, compose, play, canAnimate, introFor } from '../src/animate.js'
+import { motifs, emblem } from '../src/motifs.js'
 
 const rows = ['⣿⣿⣿⣿', '⣿⣿⣿⣿', '⣿⣿⣿⣿']
 const shown = (r) => r.flatMap((row, y) => [...row].map((ch, x) => (ch === ' ' ? null : `${x},${y}`)).filter(Boolean))
@@ -108,4 +108,51 @@ test('animation needs a TTY at least as wide as one frame line', () => {
   assert.equal(canAnimate({ isTTY: true, columns: 200, rows: height }), false)
   assert.equal(canAnimate({ isTTY: false, columns: 200, rows: 60 }), false)
   assert.equal(canAnimate({ isTTY: true }), true)
+})
+
+test('emblem data: large and small braille versions with a credit', () => {
+  assert.equal(emblem.large.length, 30)
+  assert.equal(emblem.small.length, 16)
+  for (const row of emblem.large) assert.equal([...row].length, 60)
+  for (const row of emblem.small) assert.equal([...row].length, 32)
+  assert.match(emblem.credit, /CC0/)
+})
+
+test('the emblem is large only when the window can hold it', () => {
+  assert.equal(introFor(emblem, { columns: 120, rows: 50 }).rows, emblem.large)
+  assert.equal(introFor(emblem, { columns: 120, rows: 30 }).rows, emblem.small)
+  assert.equal(introFor(emblem, { columns: 60, rows: 50 }).rows, emblem.small)
+  assert.equal(introFor(emblem, {}).rows, emblem.large)
+})
+
+test('the intro comes first, without a TTY too', async () => {
+  const intro = introFor(emblem, { columns: 120, rows: 50 })
+  const chunks = []
+  await play(motifs, { out: (s) => chunks.push(s), sleep: async () => {}, tty: false, intro })
+  const text = chunks.join('')
+  assert.ok(text.indexOf(emblem.tr) >= 0 && text.indexOf(emblem.tr) < text.indexOf(motifs[0].tr))
+})
+
+test('a taller intro frame is replaced cleanly by the shorter motif frames', async () => {
+  const intro = introFor(emblem, { columns: 120, rows: 50 })
+  const introLines = compose(intro, intro.rows).length
+  const motifLines = compose(motifs[0], motifs[0].rows).length
+  const chunks = []
+  await play(motifs.slice(0, 1), { out: (s) => chunks.push(s), sleep: async () => {}, tty: true, intro })
+  const extra = introLines - motifLines
+  const transition = chunks.filter((c) => c.includes(`\x1b[${extra}A`))
+  assert.equal(transition.length, 1, 'one redraw clears and rewinds the lines the intro left behind')
+  assert.ok(transition[0].startsWith(`\x1b[${introLines}A`))
+  assert.ok(chunks.indexOf(transition[0]) > chunks.findIndex((c) => c.includes(emblem.large[0].trim())))
+  assert.equal(chunks.at(-1), '\x1b[?25h')
+})
+
+test('the intro lasts longer than a motif', async () => {
+  const time = async (opts) => {
+    let total = 0
+    await play(motifs.slice(0, 1), { out: () => {}, sleep: async (ms) => void (total += ms), tty: true, ...opts })
+    return total
+  }
+  const [plain, withIntro] = [await time({}), await time({ intro: introFor(emblem, {}) })]
+  assert.ok(withIntro - plain > 10000, `${withIntro - plain} ms`)
 })

@@ -1,9 +1,9 @@
-import { WHISPER, paint } from './style.js'
+import { paint } from './style.js'
 
 const HIDDEN = ' '
 const WIDTH = 52
 const LINE_WIDTH = WIDTH + 2
-const FRAME_ROWS = 19 // 16 art rows, a blank line, caption, credit
+const FRAME_ROWS = 18 // 16 art rows, a blank line, the caption
 
 const REVEAL_STEPS = 48
 const HOLD_FRAMES = 36
@@ -61,15 +61,12 @@ const center = (text, width) => {
   return ' '.repeat(Math.floor(gap / 2)) + text + ' '.repeat(Math.ceil(gap / 2))
 }
 
-/** The lines of one frame: art, then caption and credit once `captionOn`. */
+/** The lines of one frame: art, then the caption once `captionOn`. Credits live in the data and the README. */
 export const compose = (motif, art, { captionOn = true, color = false, tone = 8 } = {}) => {
   const width = textWidth(art)
   const gold = paint(goldAt(tone), color)
-  const whisper = paint(WHISPER, color)
   const blank = ' '.repeat(width)
-  const caption = captionOn
-    ? [paint(goldAt(8), color)(center(`${motif.tr} · ${motif.en}`, width)), whisper(center(motif.credit, width))]
-    : [blank, blank]
+  const caption = captionOn ? [paint(goldAt(8), color)(center(`${motif.tr} · ${motif.en}`, width))] : [blank]
   return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => `  ${line}`)
 }
 

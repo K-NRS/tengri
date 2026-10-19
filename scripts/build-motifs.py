@@ -206,7 +206,6 @@ def main():
         "tr": "Tengri sembolü",
         "en": "Tengrist symbol",
         "credit": "Modanung, CC0",
-        "caption": False,  # the emblem opens the screen on its own, without a name under it
         # 32 x 16, 60 x 30 and 96 x 48 braille cells
         "tiers": [to_braille(fit(symbol, side, side, pad)) for side, pad in [(64, 2), (120, 4), (192, 4)]],
     }

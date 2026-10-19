@@ -11,7 +11,7 @@ const realSleep = (ms, signal) =>
  * `signal` aborts. Resolves to the key that stopped it, or null. Without a
  * TTY nothing is read: every motif is printed once.
  */
-export const runTamga = async ({ list, intro, introSpeed, out, read, size, color, tty, signal, sleep }) => {
+export const runTamga = async ({ list, intro, introSpeed, introLinger, out, read, size, color, tty, signal, sleep }) => {
   const stopper = new AbortController()
   let stoppedBy = null
   const stop = (key) => {
@@ -28,6 +28,7 @@ export const runTamga = async ({ list, intro, introSpeed, out, read, size, color
     loops: tty && list.length > 0 ? Infinity : 1,
     intro,
     introSpeed,
+    introLinger,
     size,
     signal: stopper.signal,
   })

@@ -78,23 +78,23 @@ test('an intro alone plays once and ends by itself, without a key', async () => 
   assert.equal(chunks.at(-1), LEAVE)
 })
 
-test('the short intro is much shorter than the screensaver intro', async () => {
-  const time = async (introSpeed) => {
+test('the quick intro wipes in at the screensaver pace but lingers less', async () => {
+  const time = async (opts) => {
     let total = 0
     await runTamga({
       list: [],
       intro: emblem,
-      introSpeed,
       out: () => {},
       read: () => new Promise(() => {}),
       sleep: async (ms) => void (total += ms),
       tty: true,
+      ...opts,
     })
     return total
   }
-  const [short, long] = [await time(0.45), await time(1.6)]
-  assert.ok(short > 3000 && short < 5000, `${short} ms`)
-  assert.ok(long > 3 * short)
+  const [full, quick] = [await time({ introSpeed: 1.6 }), await time({ introSpeed: 1.6, introLinger: 0.35 })]
+  assert.ok(quick > 6000 && quick < 9000, `${quick} ms`)
+  assert.ok(quick < full * 0.65, `${quick} ms vs ${full} ms`)
 })
 
 test('without a TTY it prints once and reads nothing', async () => {

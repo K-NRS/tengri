@@ -37,14 +37,17 @@ test('dissolve: everything at 0, nothing at 1, only ever shrinking', () => {
   for (const cell of b) assert.ok(a.includes(cell))
 })
 
-test('every frame has the same number of lines and the same width', () => {
-  const motif = motifs[0]
-  const full = compose(motif, motif.rows)
-  const bare = compose(motif, reveal(motif.rows, 0.4), { captionOn: false })
-  assert.equal(full.length, bare.length)
-  assert.equal(new Set([...full, ...bare].map((l) => [...l].length)).size, 1)
-  assert.ok(full.join('\n').includes(motif.tr))
-  assert.equal(bare.join('\n').includes(motif.tr), false)
+test('a frame is only the drawing: no caption, no credit, every line the same width', () => {
+  for (const item of [...motifs, emblem]) {
+    for (const art of item.tiers) {
+      const frame = compose(item, art, { indent: 0 })
+      assert.equal(frame.length, art.length, item.id)
+      assert.equal(new Set(frame.map((l) => [...l].length)).size, 1, item.id)
+      const text = frame.join('\n')
+      assert.equal(text.includes(item.tr), false, item.id)
+      assert.equal(text.includes(item.credit), false, item.id)
+    }
+  }
 })
 
 test('motif data: unique ids, two sizes each, credits', () => {
@@ -64,15 +67,6 @@ test('motif data: unique ids, two sizes each, credits', () => {
 test('emblem data: three sizes and a credit', () => {
   assert.deepEqual(emblem.tiers.map((t) => [t.length, [...t[0]].length]), [[16, 32], [30, 60], [48, 96]])
   assert.match(emblem.credit, /CC0/)
-})
-
-test('the emblem has no caption, so its frame is only the drawing', () => {
-  assert.equal(emblem.caption, false)
-  for (const art of emblem.tiers) {
-    const lines = compose(emblem, art)
-    assert.equal(lines.length, art.length)
-    assert.equal(lines.join('\n').includes(emblem.tr), false)
-  }
 })
 
 test('pickTier takes the biggest drawing the window can hold', () => {
@@ -102,10 +96,11 @@ test('without a TTY the intro and every motif print once, smallest size, no esca
   await play(motifs, { out: (s) => chunks.push(s), sleep: noSleep, tty: false, intro: emblem })
   const text = chunks.join('')
   assert.equal(text.includes('\x1b'), false)
-  const mark = emblem.tiers[0].find((row) => /[⠁-⣿]/u.test(row))
-  assert.ok(text.indexOf(mark) >= 0 && text.indexOf(mark) < text.indexOf(motifs[0].tr), 'the emblem comes first')
-  assert.equal(text.includes(emblem.tr), false, 'with no name under it')
-  for (const m of motifs) assert.ok(text.includes(m.tr), m.id)
+  const inked = (item) => item.tiers[0].find((row) => /[⠁-⣿]/u.test(row))
+  const at = (item) => text.indexOf(inked(item))
+  assert.ok(at(emblem) >= 0 && at(emblem) < at(motifs[0]), 'the emblem comes first')
+  for (const m of motifs) assert.ok(at(m) >= 0, m.id)
+  assert.equal(text.includes(emblem.tr), false, 'with no names under the drawings')
 })
 
 test('on a TTY it takes the alternate screen and always gives it back', async () => {
@@ -135,9 +130,9 @@ test('frames are centred in the window', async () => {
   const [, top, left] = frame.match(/^\x1b\[(\d+);(\d+)H/)
   const art = pickTier(motifs[0], window)
   const width = Math.max(52, [...art[0]].length)
-  assert.equal(Number(top), Math.floor((window.rows - (art.length + 2)) / 2) + 1)
+  assert.equal(Number(top), Math.floor((window.rows - art.length) / 2) + 1)
   assert.equal(Number(left), Math.floor((window.columns - width) / 2) + 1)
-  assert.equal(frame.split('H').length - 1, art.length + 2, 'one positioned line per frame row')
+  assert.equal(frame.split('H').length - 1, art.length, 'one positioned line per frame row')
 })
 
 test('a bigger window gets the bigger drawing, and a resize clears the screen', async () => {
@@ -152,7 +147,7 @@ test('a bigger window gets the bigger drawing, and a resize clears the screen', 
   const clears = chunks.filter((c) => c === '\x1b[2J').length
   assert.equal(clears, 2, 'once on entering, once more after the resize')
   const lastFrame = chunks.filter((c) => /^\x1b\[\d+;\d+H/.test(c)).at(-1)
-  assert.equal(lastFrame.split('H').length - 1, motifs[0].tiers[1].length + 2)
+  assert.equal(lastFrame.split('H').length - 1, motifs[0].tiers[1].length)
 })
 
 test('aborting stops it at once and still leaves the screen', async () => {

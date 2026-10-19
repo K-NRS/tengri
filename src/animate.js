@@ -2,7 +2,7 @@ import { paint } from './style.js'
 
 const HIDDEN = ' '
 const WIDTH = 52
-const FRAME_ROWS = 18 // 16 art rows, a blank line, the caption
+const FRAME_ROWS = 16 // rows of the smallest drawing
 
 const REVEAL_STEPS = 48
 const HOLD_FRAMES = 36
@@ -52,29 +52,22 @@ export const dissolve = (rows, t, seed = 0) =>
   mapCells(rows, (x, y) => hash(y * 1000 + x + seed * 7919) >= t)
 
 const textWidth = (rows) => Math.max(WIDTH, [...rows[0]].length)
-const frameHeight = (rows) => rows.length + 2
 
 /** The biggest drawing of an item that fits the window, with a row to spare. */
 export const pickTier = ({ tiers }, { columns = 80, rows = 40 } = {}) =>
-  [...tiers].reverse().find((t) => textWidth(t) <= columns && frameHeight(t) <= rows - 1) ?? tiers[0]
+  [...tiers].reverse().find((t) => textWidth(t) <= columns && t.length <= rows - 1) ?? tiers[0]
 
 const center = (text, width) => {
   const gap = Math.max(0, width - [...text].length)
   return ' '.repeat(Math.floor(gap / 2)) + text + ' '.repeat(Math.ceil(gap / 2))
 }
 
-/**
- * The lines of one frame: art, a blank line, then the caption once `captionOn`
- * (none at all when the item says `caption: false`). Credits live in the data and the README.
- */
-export const compose = (motif, art, { captionOn = true, color = false, tone = 8, indent = 2 } = {}) => {
+/** The lines of one frame: just the drawing, centred and in gold. Names and credits live in the data and the README. */
+export const compose = (_motif, art, { color = false, tone = 8, indent = 2 } = {}) => {
   const width = textWidth(art)
   const gold = paint(goldAt(tone), color)
   const pad = ' '.repeat(indent)
-  if (motif.caption === false) return art.map((row) => pad + gold(center(row, width)))
-  const blank = ' '.repeat(width)
-  const caption = captionOn ? [paint(goldAt(8), color)(center(`${motif.tr} · ${motif.en}`, width))] : [blank]
-  return [...art.map((row) => gold(center(row, width))), blank, ...caption].map((line) => pad + line)
+  return art.map((row) => pad + gold(center(row, width)))
 }
 
 const STOP = Symbol('stop')
@@ -82,13 +75,13 @@ const STOP = Symbol('stop')
 /**
  * A slow full-screen screensaver on the terminal's alternate screen, centred
  * and redrawn to the current window size. The optional `intro` (the emblem)
- * opens it once (`introSpeed` scales its length); then each motif wipes in,
+ * opens it once (`introSpeed` sets how slowly it wipes in, `introLinger` how long it is held and dissolved); then each motif wipes in,
  * glows while held, and dissolves, and the list repeats `loops` times (Infinity until `signal` aborts). Without
  * a TTY everything is printed once, smallest size, with no escape codes.
  */
 export const play = async (
   list,
-  { out, sleep, tty, color = false, loops = 1, intro, introSpeed = 1.6, size = () => ({}), signal },
+  { out, sleep, tty, color = false, loops = 1, intro, introSpeed = 1.6, introLinger = introSpeed, size = () => ({}), signal },
 ) => {
   if (!tty) {
     for (const motif of intro ? [intro, ...list] : list) {
@@ -115,12 +108,12 @@ export const play = async (
     const left = Math.max(1, Math.floor(((window.columns ?? 80) - width) / 2) + 1)
     out(lines.map((line, i) => `\x1b[${top + i};${left}H${line}`).join(''))
   }
-  const scene = async (motif, { mode, seed, speed = 1, gap = true }) => {
+  const scene = async (motif, { mode, seed, speed = 1, linger = speed, gap = true }) => {
     const reveals = Math.round(REVEAL_STEPS * speed)
-    const holds = Math.round(HOLD_FRAMES * speed)
-    const dissolves = Math.round(DISSOLVE_STEPS * speed)
+    const holds = Math.round(HOLD_FRAMES * linger)
+    const dissolves = Math.round(DISSOLVE_STEPS * linger)
     for (let s = 1; s <= reveals; s++) {
-      draw(motif, (art) => reveal(art, s / reveals, mode), { captionOn: false })
+      draw(motif, (art) => reveal(art, s / reveals, mode), {})
       await tick(FRAME_MS)
     }
     for (let f = 0; f < holds; f++) {
@@ -128,13 +121,13 @@ export const play = async (
       await tick(HOLD_FRAME_MS)
     }
     for (let s = 1; s <= dissolves; s++) {
-      draw(motif, (art) => dissolve(art, s / dissolves, seed), { captionOn: s < dissolves / 3 })
+      draw(motif, (art) => dissolve(art, s / dissolves, seed), {})
       await tick(FRAME_MS)
     }
     if (gap) await tick(GAP_MS)
   }
   try {
-    if (intro) await scene(intro, { mode: 'radial', seed: 99, speed: introSpeed, gap: list.length > 0 })
+    if (intro) await scene(intro, { mode: 'radial', seed: 99, speed: introSpeed, linger: introLinger, gap: list.length > 0 })
     for (let round = 0; round < loops; round++) {
       for (const [i, motif] of list.entries()) {
         await scene(motif, { mode: i % 2 ? 'radial' : 'diagonal', seed: i + round })

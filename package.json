@@ -36,5 +36,13 @@
   },
   "scripts": {
     "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/K-NRS/tengri.git"
+  },
+  "homepage": "https://github.com/K-NRS/tengri#readme",
+  "bugs": {
+    "url": "https://github.com/K-NRS/tengri/issues"
   }
 }

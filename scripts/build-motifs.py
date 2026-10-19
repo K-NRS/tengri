@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 W, H = 96, 64  # dots -> 48 columns x 16 rows of braille cells
@@ -20,6 +20,7 @@ BITS = [[0x01, 0x08], [0x02, 0x10], [0x04, 0x20], [0x40, 0x80]]
 
 # id, Turkish name, English name, svg file, credit
 TAMGAS = [
+    ("ashina", "Aşina damgası", "Ashina clan", "docs/tamgas/ashina.png", "International Turkic Academy, CC BY-SA 4.0"),
     ("kayi", "Kayı boyu damgası", "Kayı tribe", "docs/tamgas/kayi-2.svg", "SAİT71, public domain"),
     ("kipchak", "Kıpçak damgası", "Kipchak", "docs/tamgas/kipchak.svg", "Devlet Geray, CC0"),
     ("kereyit", "Kereyit damgası", "Kereyit", "docs/tamgas/kereyit.svg", "Devlet Geray, CC0"),
@@ -47,7 +48,17 @@ def to_braille(mask):
     return rows
 
 
+def render_raster(path):
+    """A thin line drawing: ink where dark, thickened so it survives the downscale."""
+    img = Image.open(path).convert("RGBA")
+    white = Image.new("RGBA", img.size, (255, 255, 255, 255))
+    gray = Image.alpha_composite(white, img).convert("L")
+    return gray.point(lambda v: 255 if v < 140 else 0).filter(ImageFilter.MaxFilter(9))
+
+
 def render_svg(path):
+    if Path(path).suffix == ".png":
+        return render_raster(path)
     with tempfile.TemporaryDirectory() as tmp:
         subprocess.run(["qlmanage", "-t", "-s", "600", "-o", tmp, str(path)], check=True, capture_output=True)
         png = next(Path(tmp).glob("*.png"))

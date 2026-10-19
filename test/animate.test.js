@@ -96,7 +96,7 @@ test('motif data: unique ids, uniform grids, credits', () => {
     assert.equal(m.rows.length, 16, m.id)
     for (const row of m.rows) assert.equal([...row].length, 48, m.id)
     assert.ok(m.rows.some((r) => /[⠁-⣿]/u.test(r)), `${m.id} is empty`)
-    if (m.kind === 'tamga') assert.match(m.credit, /CC0|public domain/i, m.id)
+    if (m.kind === 'tamga') assert.match(m.credit, /CC0|CC BY-SA 4\.0|public domain/i, m.id)
   }
 })
 

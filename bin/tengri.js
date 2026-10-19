@@ -3,7 +3,7 @@ import { transliterate } from '../src/transliterate.js'
 import { formatQuote, MIN_WIDTH, CREDIT } from '../src/format.js'
 import { WHISPER, paint } from '../src/style.js'
 
-const USAGE = `tengri            a line from the Orkhon inscriptions or Kutadgu Bilig
+const USAGE = `tengri            a line from the Orkhon inscriptions or Kutadgu Bilig; space or → next, ← back, q quit
 tengri <text>     Latin text in Old Turkic script (Turkish or scholarly spelling)
 tengri --tamga    full-screen screensaver of tamgas and kilim motifs (any key to stop)`
 
@@ -49,6 +49,26 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log(`\n  ${paint(WHISPER, color)(CREDIT)}\n`)
 } else if (args.length > 0) {
   console.log(transliterate(args.join(' ')))
+} else if (process.stdin.isTTY && process.stdout.isTTY) {
+  const { quotes } = await import('../src/quotes.js')
+  const { browse } = await import('../src/browse.js')
+  const { on } = await import('node:events')
+  process.stdin.setRawMode(true)
+  process.stdin.resume()
+  const keys = on(process.stdin, 'data')
+  try {
+    await browse(quotes, {
+      out: (text) => process.stdout.write(text),
+      keys: (async function* () {
+        for await (const [chunk] of keys) yield chunk
+      })(),
+      size: () => ({ columns: process.stdout.columns }),
+      color,
+    })
+  } finally {
+    process.stdin.setRawMode(false)
+    process.stdin.pause()
+  }
 } else {
   const { randomQuote } = await import('../src/quotes.js')
   const width = Math.max(MIN_WIDTH, Math.min((process.stdout.columns ?? 80) - 8, 68))

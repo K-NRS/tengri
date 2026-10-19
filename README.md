@@ -63,7 +63,7 @@ Write your own:
 npx tengri "kök türk"      # 𐰚𐰇𐰚⁚𐱅𐰇𐰼𐰚
 ```
 
-Your terminal needs a font with the Old Turkic block (U+10C00–10C4F), for example Noto Sans Old Turkic. Without one you see empty boxes; the Latin line under each quote still reads fine.
+Your terminal needs a font with the Old Turkic block (U+10C00–10C4F). Without one you see empty boxes (the Latin line under each quote still reads fine). On macOS: `brew install --cask font-noto-sans-old-turkic`, then restart the terminal.
 
 ## Library
 

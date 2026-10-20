@@ -101,11 +101,21 @@ The Aşina frame in `data/motifs.json` is an adaptation of that CC BY-SA drawing
 
 *The Kül Tigin stele (732), Orkhon Valley, Mongolia. Photo: [Vezirtonyukuk](https://commons.wikimedia.org/wiki/File:Kultigin_Monument_of_Orkhon_Inscriptions.jpeg), CC BY-SA 4.0, resized.*
 
-In 1889 Nikolai Yadrintsev's expedition found two huge stone steles in Mongolia's Orkhon Valley, set up in the early 8th century for the brothers Kül Tigin and Bilge Kagan. They were covered in an unknown alphabet, and in places in Chinese. Nobody could read the script.
+In 1889 Nikolai Yadrintsev's expedition found two huge stone steles in Mongolia's Orkhon Valley, set up in the early 8th century for the brothers Kül Tigin and Bilge Kagan. They were covered in an alphabet nobody could read, and in places in Chinese. Nobody was even sure what language it wrote.
 
-Vilhelm Thomsen, a Danish linguist in Copenhagen, worked from rubbings and photographs. On 15 December 1893 he announced to the Royal Danish Academy that the script was an alphabet and the language was Turkic. (Some sources give 25 November.) That date is now World Turkic Language Family Day.
+In Copenhagen the linguist Vilhelm Thomsen went to work on the printed copies (the Finnish expedition's edition and Radloff's atlas, both 1892). He had 38 signs and no key. A sign that kept turning up between two others had to be a vowel, and he found three of those. The consonants fell into two sets, one for back vowels and one for front vowels: vowel harmony, the fingerprint of a Turkic language.
 
-The retelling in Turkish sources goes like this: he looked for the words that kept recurring and found the first one, *tengri* (𐱅𐰭𐰼𐰃, "sky, god"), then *Türk*, and the rest followed. I could not confirm this in an academic source, so take the order of events as tradition. Wilhelm Radloff, who had already published the texts, read them in full soon after with Thomsen's key. Thomsen's own account came out in 1896 (*Inscriptions de l'Orkhon déchiffrées*).
+Then he went hunting for words, and in his own account of it (his French notice of 1893) the first one he caught was *tengri*. One word was everywhere, alone or with endings, often opening a new section and in what looked like the khan's title, "heavenly kagan". It ended in the vowel he had just identified as *i*. Mongolian and every Turkic language share a word like that: *tengri*, sky, god.
+
+The second word was the prince's name. The Chinese text gives something like Kiueh-ti-kin, and everyone read it as Kök-tigin, "blue prince". Thomsen doubted it for a long time. The sign he had taken for *k* turned out to be *l*, and the name was Kül Tigin; the Chinese had simply dropped the final *l*, as it does in *pi-kia*, the Turkic *bilge*, "wise". Those two words gave him the third, the one on every line: *Türk*, the Chinese Tou-kiue. The language was Turkic.
+
+| | | |
+|---|---|---|
+| 𐱅𐰭𐰼𐰃 | tengri | sky, god |
+| 𐰚𐰇𐰠⁚𐱅𐰃𐰏𐰤 | Kül Tigin | the prince the stele was raised for |
+| 𐱅𐰇𐰼𐰚 | Türk | the people |
+
+On 15 December 1893 he announced it to the Royal Danish Academy of Sciences and Letters (some sources say 25 November). That date is now World Turkic Language Family Day. Wilhelm Radloff's reading of the texts followed in 1894–95, using Thomsen's key, and Thomsen's full account came out in 1896 (*Inscriptions de l'Orkhon déchiffrées*). His 1893 notice is [on the Internet Archive](https://archive.org/details/dechiffrementdesinscriptionsdelorkhonetdelienissei).
 
 That is why this package is called `tengri`.
 
